@@ -79,7 +79,7 @@ def create_meal(name):
         "hero_venmo_id": session['venmo_id'],
         "name": name,
         "description": "Because finals are tomorrow",
-        "deadline": datetime.datetime(2013, 9, 8, 18),
+        "deadline": datetime(2013, 9, 8, 18),
         "paid": False
     }
     mongo.db.meals.insert(meal)
@@ -116,7 +116,7 @@ def setup():
             user_from_db['lastname'] = user['lastname']
             user_from_db['email'] = user['email']
             user_from_db['picture'] = user['picture']
-            user_from_db['last_visit'] = datetime.datetime.utcnow()
+            user_from_db['last_visit'] = datetime.utcnow()
         else:
             print "User has NOT used GrubHero before. Making account in DB."
             mongo.db.users.insert({
@@ -126,7 +126,7 @@ def setup():
                 "lastname": user['lastname'],
                 "email": user['email'],
                 "picture": user['picture'],
-                "last_visit": datetime.datetime.utcnow()
+                "last_visit": datetime.utcnow()
             })
 
         session['venmo_id'] = user['id']
@@ -141,7 +141,7 @@ def setup():
             "firstname": user['firstname'],
             "lastname": user['lastname'],
             "picture": user['picture'],
-            "last_visit": datetime.datetime.utcnow()
+            "last_visit": datetime.utcnow()
         }
         mongo.db.users.insert(user)
 
