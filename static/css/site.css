@@ -8,6 +8,7 @@ body {
   font-family: exo, sans-serif;
   font-weight: 600;
   color: black;
+  font-size: 23px;
 }
 
 .navbar-brand:hover {
@@ -77,4 +78,67 @@ img.nav-avatar {
   font-size: 12px;
   font-weight: normal;
   background-color: #D9531F;
+  white-space: normal;
+}
+
+.entry-row,
+.divider-row {
+  margin: 8px auto;
+  white-space: nowrap;
+  position: relative;
+  width: 100%;
+  table-layout: fixed;
+}
+
+.entry-row td,
+.divider-row td {
+  padding-right: 10px;
+}
+
+.entry-row > *:last-child,
+.divider-row > *:last-child {
+  margin-right: 0;
+}
+
+.divider-row .label-divider {
+  text-align: center;
+  background: #ddd;
+  color: #888;
+  font-size: 10px;
+  font-weight: bold;
+  letter-spacing: 3px;
+  display: block;
+}
+
+.btn-move {
+  cursor: row-resize;
+}
+
+.entry-buttons-cell {
+  width: 60px;
+}
+
+.entry-name-cell,
+.entry-divider-cell {
+  width: auto;
+}
+
+.entry-price-cell {
+  width: 80px;
+}
+
+.menu-controls {
+  font-size: 20px;
+  margin-bottom: -10px;
+  border-top: solid 1px #ddd;
+  margin-top: 5px;
+  padding-top: 5px;
+  margin-left: -10px;
+  margin-right: -10px;
+  padding-left: 10px;
+  padding-right: 10px;
+  background-color: #fff;
+  padding-bottom: 5px;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
 }
