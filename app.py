@@ -21,9 +21,16 @@ def index():
     if 'venmo_id' in session:
         pp(session)
 
+        # Meals for which logged in user is the hero
+        meals = mongo.db.meals.find({"hero_venmo_id": session['venmo_id']})
+
+        # Orders which the user has placed in other meals
+        # orders = mongo.db.meals.find({})
+
         return render_template('index.html',
             logged_in=True,
-            meals=mongo.db.meals.find(),
+            meals=meals
+            orders=None # not implemented
             VENMO_CLIENT_ID=VENMO_OAUTH_CLIENT_ID)
     else:
         return render_template('index_logged_out.html',
