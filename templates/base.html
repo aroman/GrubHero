@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+  <head>
+    <title>{% block title %}Who wants food?{% endblock %}</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/site.css') }}" />
+    {% block head %}
+    {% endblock %}
+  </head>
+  <body>
+    <div class="container">
+      <div class="navbar navbar-default">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#"><span class="logo-orange">Grub</span>Hero</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="#">Meal Types</a></li>
+            <li><a href="#">Create Meal</a></li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="https://sandbox-api.venmo.com/oauth/authorize?client_id={{ VENMO_CLIENT_ID }}&scope=make_payments,access_profile&response_type=code">Sign In with <img class="venmo-logo" src="{{ url_for('static', filename='images/venmo.png') }}" /></a></li>
+          </ul>
+        </div>
+      </div>
+
+      {% block content %}{% endblock %}
+
+    </div>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  </body>
+</html>
