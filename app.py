@@ -30,17 +30,18 @@ def index():
          VENMO_CLIENT_ID=VENMO_OAUTH_CLIENT_ID)
 
 
-@app.route("/pizza_mothafuckas")
-def pizza_mothafuckas():
+@app.route("/create_meal/<name>")
+def create_meal(name):
     if 'venmo_id' in session:
         meal = {
             "hero_venmo_id": session['venmo_id'],
-            "name": "Pizza Party",
+            "name": name,
             "description": "Because finals are tomorrow",
-            "deadline": datetime.datetime(2013, 9, 8, 18)
+            "deadline": datetime.datetime(2013, 9, 8, 18),
+            "paid": False
         }
         mongo.db.meals.insert(meal)
-        return redirect(url_for('index'))
+        return 'Meal with name %s created. <a href="/">Go home</a>' % name
     else:
         return redirect(url_for('index'))
 
@@ -67,6 +68,7 @@ def setup():
         session['lastname'] = user['lastname']
         user = {
             "venmo_id": user['id'],
+            "access_token": access_token,
             "firstname": user['firstname'],
             "lastname": user['lastname'],
             "picture": user['picture'],
