@@ -108,6 +108,23 @@ def user(venmo_id):
     else:
         return redirect(url_for('index'))
 
+@app.route("/meals/new", methods=["POST", "GET"])
+def new_meal():
+    form_data = {}
+    errors = {}
+
+    required = [
+        "name",
+        "deadline_date",
+        "deadline_time",
+        
+    ]
+
+    if request.method == 'POST':
+        if ()
+
+    return render_template('create_meal.html', form_data, errors)
+        
 @app.route("/logout")
 def logout():
     session.pop('venmo_id', None)
