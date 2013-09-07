@@ -54,20 +54,46 @@ def create_meal(name):
 def setup():
     oauth_code = request.args.get('code')
     if oauth_code:
+        url = "https://api.venmo.com/oauth/access_token"
         data = {
             "client_id": VENMO_OAUTH_CLIENT_ID,
             "client_secret": VENMO_OAUTH_CLIENT_SECRET,
             "code": oauth_code
         }
-
-        url = "https://api.venmo.com/oauth/access_token"
         response = requests.post(url, data)
         response_dict = response.json()
         error = response_dict.get('error')
         if error:
             return "Error from Venmo OAUTH: %s" % error
         access_token = response_dict.get('access_token')
+
         user = response_dict.get('user')
+        print "User from venmo oauth:"
+        pp(user)
+
+        user_from_db = mongo.db.users.find_one({"venmo_id": user['id']})
+        print "User from db:"
+        pp(user_from_db)
+
+        if user_from_db:
+            print "User has used GrubHero before; we have them in the DB."
+            user_from_db['firstname'] = user['firstname']
+            user_from_db['lastname'] = user['lastname']
+            user_from_db['email'] = user['email']
+            user_from_db['picture'] = user['picture']
+            user_from_db['last_visit'] = datetime.datetime.utcnow()
+        else:
+            print "User has NOT used GrubHero before. Making account in DB."
+            mongo.db.users.insert({
+                "venmo_id": user['id'],
+                "access_token": access_token,
+                "firstname": user['firstname'],
+                "lastname": user['lastname'],
+                "email": user['email'],
+                "picture": user['picture'],
+                "last_visit": datetime.datetime.utcnow()
+            })
+
         session['venmo_id'] = user['id']
         session['email'] = user['email']
         session['username'] = user['username']
