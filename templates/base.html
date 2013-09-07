@@ -4,6 +4,7 @@
     <title>{% block title %}GrubHero{% endblock %}</title>
     <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.png') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/custom-theme/jquery-ui-1.10.3.custom.min.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/site.css') }}" />
     {% block head %}
     {% endblock %}
@@ -30,7 +31,9 @@
 
     </div>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-    <script type="text/javascript">
+    <script src="{{ url_for('static', filename='js/jquery-ui-1.10.3.custom.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/jquery-ui-timepicker-addon.js') }}"></script>
+]    <script type="text/javascript">
       {% block javascript %}
       {% endblock %}
     </script>
