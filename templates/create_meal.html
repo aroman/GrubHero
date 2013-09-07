@@ -5,34 +5,143 @@
 {% block content %}
   <form id="meal-form" method="post">
     <div class="row">
-      <div class="col-xs-4">
+      <div class="col-sm-4 col-xs-12">
         <div class="mh-block">
           <h1>Meal Info</h1>
           {% if errors.name %}<div class="label label-danger">{{ errors.name }}</div>{% endif %}
           <input id="meal-name" type="text" name="name" class="form-control" placeholder="Meal Name" value="{{ form_data.name }}" />
           <textarea id="meal-description" placeholder="Description (optional)" class="form-control" name="description">{{ form_data.description }}</textarea>
           {% if errors.deadline %}<div class="label label-danger">{{ errors.deadline }}</div>{% endif %}
-          <input id="meal-deadline" type="text" name="deadline" class="form-control" placeholder="Deadline" value="{{ form_data.deadline.strftime(JQUERY_TIME_FORMAT) }}" />
-          <input id="btn-submit" type="submit" value="Create Meal" class="form-control btn btn-danger" />
+          <input id="meal-deadline" type="text" name="deadline" class="form-control" placeholder="Deadline" value="{{ form_data.deadline.strftime(JQUERY_TIME_FORMAT) if form_data.deadline else "" }}" />
+          <input id="btn-submit" type="submit" value="Create Meal &raquo;" class="form-control btn btn-danger" />
         </div>
         <div class="mh-block">
           <h1>Invited Users</h1>
           {% if errors.users %}<div class="label label-danger">{{ errors.users }}</div>{% endif %}
         </div>
       </div>
-      <div class="col-xs-8">
+      <div class="col-sm-8 col-xs-12">
         <div class="mh-block">
           <h1>Menu</h1>
           {% if errors.menu %}<div class="label label-danger">{{ errors.menu }}</div>{% endif %}
+          <div id="menu-entry-container"></div>
+          <div class="menu-controls">
+            <a class="btn btn-danger" onclick="addEntry(); return false;"><span class="glyphicon glyphicon-plus-sign"></span> Add Entry</a>
+            <a class="btn btn-danger" onclick="addDivider(); return false;"><span class="glyphicon glyphicon-plus-sign"></span> Add Divider</a>
+          </div>
         </div>
       </div>
     </div>
+    <input type="hidden" name="menu" />
+    <input type="hidden" name="users" />
   </form>
+
+  <script type="text/template" id="entry-template">
+    <table class="entry-row">
+      <tr>
+        <td class="entry-buttons-cell">
+          <a onclick="return false;" class="btn btn-default btn-xs btn-move"><span class="glyphicon glyphicon-resize-vertical"></span></a>
+          <a onclick="removeRow(this); return false;" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-remove"></span></a>
+        </td>
+        <td class="entry-name-cell">
+          <input type="text" onchange="updateMenuData()" class="form-control entry-name" placeholder="Food Option">
+        </td>
+        <td class="entry-price-cell">
+          <input type="text" onfocus="this.select()"  onmouseup="return false" onchange="updateMenuData()" class="form-control entry-price" placeholder="Price">
+        </td>
+      </tr>
+    </table>
+  </script>
+
+  <script type="text/template" id="divider-template">
+    <table class="divider-row">
+      <tr>
+        <td class="entry-buttons-cell">
+          <a onclick="return false;" class="btn btn-default btn-xs btn-move"><span class="glyphicon glyphicon-resize-vertical"></span></a>
+          <a onclick="removeRow(this); return false;" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-remove"></span></a>
+        </td>
+        <td class="entry-divider-cell">
+          <div class="label label-default label-divider">divider</div>
+        </td>
+      </tr>
+    </table>
+  </script>
 {% endblock %}
 
 {% block javascript %}
-  $('#meal-deadline').datetimepicker({
-    controlType: 'select',
-    timeFormat: "hh:mm tt"
-  });
+  $(function() {
+    var $entryContainer = $("#menu-entry-container");
+    var $entryTemplate = $("#entry-template");
+    var $dividerTemplate = $("#divider-template");
+
+    window.addEntry = function() {
+      $entryContainer.append($entryTemplate.html());
+      updateMenuData();
+    }
+
+    window.addDivider = function() {
+      $entryContainer.append($dividerTemplate.html());
+      updateMenuData();
+    }
+
+    window.removeRow = function(button) {
+      $(button).parent().parent().parent().parent().remove();
+      updateMenuData();
+    }
+
+    window.updateMenuData = function() {
+      $(".entry-price").each(function() {
+        var val = parseFloat($(this).val().replace(/[^\d.-]/g,''));
+        if (isNaN(val))
+          $(this).val('');
+        else
+          $(this).val("$" + val.toFixed(2));
+      });
+
+      menu_data = [];
+
+      var count = 0;
+      $entryContainer.find(">*").each(function() {
+        if ($(this).hasClass("entry-row")) {
+          var price = parseFloat($(this).find(".entry-price").val());
+          if (price) price = price.replace(/[^\d.-]/g,'');
+          menu_data.push({
+            "type": "entry",
+            "name": $(this).find(".entry-name").val(),
+            "price": price,
+            "order": count++
+          });
+        } else if ($(this).hasClass("divider-row")) {
+          menu_data.push({
+            "type": "divider",
+            "order": count++
+          });
+        }
+      });
+
+      $("input[name=menu]").val(JSON.stringify(menu_data));
+    }
+
+    function formatPrice() {
+      var s = number.toString();
+
+    }
+
+    for (var i = 0; i < 3; i++) addEntry();
+
+    $entryContainer.sortable({
+      //placeholder: "rubric-constructor-placeholder cat-placeholder",
+      forcePlaceholderSize: true,
+      handle: ".btn-move",
+      //items: "div[data-category-virtual=false]",
+      stop: function(event, ui) {
+        updateMenuData();
+      }
+    });
+
+    $('#meal-deadline').datetimepicker({
+      controlType: 'select',
+      timeFormat: "hh:mm tt"
+    });
+  })
 {% endblock %}
