@@ -62,15 +62,38 @@ def index():
         pp(session)
 
         # Meals for which logged in user is the hero
-        meals = mongo.db.meals.find({"hero_venmo_id": session['venmo_id']})
+        my_meals = mongo.db.meals.find({"hero_venmo_id": session['venmo_id']})
 
         # Orders which the user has placed in other meals
-        # orders = mongo.db.meals.find({})
+        meals_with_orders = mongo.db.meals.find({"participants":
+            {"$elemMatch": {"venmo_id": session['venmo_id']}}
+        })
+
+        orders = []
+        for meal_with_order in meals_with_orders:
+            me = None
+            for participant in meal_with_order['participants']:
+                if participant['venmo_id'] ==  session['venmo_id']:
+                    me = participant
+                    break
+            order_entries = []
+            for i, order in enumerate(me['orders']):
+                if 'separator' in meal_with_order['entries'][order['entry_index']]:
+                    continue
+                order_entries.append(meal_with_order['entries'][order['entry_index']]['name'])
+            tease = ", ".join(order_entries)
+            to_append = {
+                "name": meal_with_order['name'],
+                "entries": order_entries,
+                "tease": tease,
+                "paid": meal_with_order['paid']
+            }
+            orders.append(to_append)
 
         return render_template('index.html',
             logged_in=True,
-            meals=meals,
-            orders=None, # not implemented
+            meals=my_meals,
+            orders=orders,
             VENMO_CLIENT_ID=VENMO_OAUTH_CLIENT_ID,
             VENMO_OAUTH_URL=VENMO_OAUTH_URL)
     else:

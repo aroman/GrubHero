@@ -19,13 +19,23 @@
       </div>
       <div class="mh-block">
         <h1>My Orders</h1>
-        <em>You have no current meal orders.</em>
+        {% if orders %}
+          <ul>
+            {% for order in orders %}
+              <li>{{order.name}} - {{order.tease}}</li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <em>You have no current meal orders.</em>
+        {% endif %}
       </div>
     </div>
     <div class="col-xs-8">
       <div class="mh-block">
         <h1>Activity Feed</h1>
-        Foobar.
+        <center>
+          <i>Coming soon!</i>
+        </center>
       </div>
     </div>
   </div>
