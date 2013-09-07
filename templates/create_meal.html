@@ -3,26 +3,35 @@
 {% block title %}New Meal{% endblock %}
 
 {% block content %}
-  <div class="row">
-    <div class="col-xs-4">
-      <div class="mh-block">
-        <h1>Meal Info</h1>
+  <form id="meal-form" method="post">
+    <div class="row">
+      <div class="col-xs-4">
+        <div class="mh-block">
+          <h1>Meal Info</h1>
+          {% if errors.name %}<div class="label label-danger">{{ errors.name }}</div>{% endif %}
+          <input id="meal-name" type="text" name="name" class="form-control" placeholder="Meal Name" value="{{ form_data.name }}" />
+          <textarea id="meal-description" placeholder="Description (optional)" class="form-control" name="description">{{ form_data.description }}</textarea>
+          {% if errors.deadline %}<div class="label label-danger">{{ errors.deadline }}</div>{% endif %}
+          <input id="meal-deadline" type="text" name="deadline" class="form-control" placeholder="Deadline" value="{{ form_data.deadline.strftime(JQUERY_TIME_FORMAT) }}" />
+          <input id="btn-submit" type="submit" value="Create Meal" class="form-control btn btn-danger" />
+        </div>
+        <div class="mh-block">
+          <h1>Invited Users</h1>
+          {% if errors.users %}<div class="label label-danger">{{ errors.users }}</div>{% endif %}
+        </div>
       </div>
-      <div class="mh-block">
-        <h1>Invited Users</h1>
+      <div class="col-xs-8">
+        <div class="mh-block">
+          <h1>Menu</h1>
+          {% if errors.menu %}<div class="label label-danger">{{ errors.menu }}</div>{% endif %}
+        </div>
       </div>
     </div>
-    <div class="col-xs-8">
-      <div class="mh-block">
-        <h1>Menu</h1>
-        Foobar.
-      </div>
-    </div>
-  </div>
+  </form>
 {% endblock %}
 
 {% block javascript %}
-  $('#basic_example_3').datetimepicker({
+  $('#meal-deadline').datetimepicker({
     controlType: 'select',
     timeFormat: "hh:mm tt"
   });
