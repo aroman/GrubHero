@@ -2,6 +2,7 @@ from pprint import pprint as pp
 import requests
 import flask
 from flask import Flask, request, render_template
+import sys
 
 app = Flask(__name__)
 
@@ -34,4 +35,4 @@ def setup():
 
 if __name__ == "__main__":
     app.debug = True
-    app.run(port=80)
+    app.run(port=int(sys.argv[1]) if len(sys.argv) > 1 else 80)
