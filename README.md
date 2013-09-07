@@ -1,4 +1,4 @@
-venmo-food
+GrubHero
 ==========
 
-Duh
+Saving the world, one meal at a time.
