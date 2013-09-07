@@ -19,7 +19,7 @@ def index():
             logged_in=True,
             VENMO_CLIENT_ID=VENMO_OAUTH_CLIENT_ID)
     else:
-        return render_template('index.html',
+        return render_template('index_logged_out.html',
          VENMO_CLIENT_ID=VENMO_OAUTH_CLIENT_ID)
 
 # user = None

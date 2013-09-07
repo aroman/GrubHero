@@ -20,7 +20,7 @@
           </ul>
           <ul class="nav navbar-nav navbar-right">
             {% if logged_in %}
-              <li>Signed in as {{ session.firstname }} {{ session.lastname }}</li>
+              <li><a href="user/{{ session.venmo_id }}">{{ session.firstname }} {{ session.lastname }}</a></li>
               <li><a href="logout">Sign Out</a></li>
             {% else %}
               <li><a href="https://sandbox-api.venmo.com/oauth/authorize?client_id={{ VENMO_CLIENT_ID }}&scope=make_payments,access_profile&response_type=code">Sign In with <img class="venmo-logo" src="{{ url_for('static', filename='images/venmo.png') }}" /></a></li>
