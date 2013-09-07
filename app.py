@@ -4,14 +4,23 @@ import flask
 import datetime
 from flask import Flask, request, render_template, session, redirect, url_for
 from flask.ext.pymongo import PyMongo
+from flask.ext.mail import Mail, Message
 import sys
 from HTMLParser import HTMLParser
 from datetime import datetime
 
+import mailer
+
 app = Flask(__name__)
+app.config['MAIL_SERVER'] = "smtp.sendgrid.net"
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USERNAME'] = "aviromanoff"
+app.config['MAIL_PASSWORD'] = "pennapps2013"
 app.config['MONGO_URI'] = "mongodb://thehero:thepassword@ds043338.mongolab.com:43338/grubhero-dev"
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT' # cookie-session
+app.config
 mongo = PyMongo(app)
+mail = Mail(app)
 
 JQUERY_TIME_FORMAT = "%m/%d/%Y %I:%M %p"
 
@@ -68,6 +77,17 @@ def index():
         return render_template('index_logged_out.html',
             VENMO_OAUTH_URL=VENMO_OAUTH_URL)
 
+
+@app.route("/send_email_to/<target_venmo_id>")
+def send_email_to(target_venmo_id):
+    sender = mongo.db.users.find_one({"venmo_id": session['venmo_id']})
+    target = mongo.db.users.find_one({"venmo_id": target_venmo_id})
+    msg = Message("%s wants to be your Grub Hero!" % sender['firstname'],
+        sender=("GrubHero", "liazon@grubhero.com"),
+        recipients=[target['email']])
+    msg.html = mailer.invite_participant_template(sender, target)
+    mail.send(msg)
+    return "Email sent :)"
 
 @app.route("/create_meal/<name>")
 def create_meal(name):
