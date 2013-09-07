@@ -92,6 +92,8 @@ def setup():
             mongo.db.users.update({"venmo_id": user['id'], })
 
         session['venmo_id'] = user['id']
+        session['email'] = user['email']
+        session['username'] = user['username']
         session['firstname'] = user['firstname']
         session['lastname'] = user['lastname']
         return redirect(url_for('index'))
