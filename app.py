@@ -76,7 +76,15 @@ def setup():
         return redirect(url_for('index'))
     else:
         return "Error"
-        
+
+@app.route("/user/<venmo_id>")
+def user(venmo_id):
+    if 'venmo_id' in session:
+        person = mongo.db.users.find_one_or_404({"venmo_id": venmo_id})
+        return render_template('user.html', person=person, logged_in=True)
+    else:
+        return redirect(url_for('index'))
+
 @app.route("/logout")
 def logout():
     session.pop('venmo_id', None)
