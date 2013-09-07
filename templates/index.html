@@ -1,36 +1,14 @@
-<!doctype html>
-<html>
-  <head>
-    <title>Who wants food?</title>
-    <link rel="stylesheet" type="text/css" href="static/css/bootstrap.min.css" />
-    <link rel="stylesheet" type="text/css" href="static/css/site.css" />
-  </head>
-  <body>
-    <div class="container">
-      <div class="navbar navbar-default">
-        <div class="navbar-header">
-          <a class="navbar-brand" href="#"><span class="logo-orange">Grub</span>Hero</a>
-        </div>
-        <div class="navbar-collapse collapse">
-          <ul class="nav navbar-nav">
-            <li><a href="#">Meal Types</a></li>
-            <li><a href="#">Create Meal</a></li>
-          </ul>
-          <ul class="nav navbar-nav navbar-right">
-            <li><a href="./">Sign In with <img class="venmo-logo" src="static/images/venmo.png" /></a></li>
-          </ul>
-        </div>
-      </div>
+{% extends "base.html" %}
 
-      <div class="jumbotron">
-        <h1>Who wants food?</h1>
-        <p>GrubHero makes it easy to organize group meal orders.</p>
-        <p>As a hero, you'll create a food menu and an ordering deadline. Users you add to the meal will receive an email where they can</p>
-        <p>
-          <a class="btn btn-lg btn-primary" href="../../components/#navbar">Create a Meal &raquo;</a>
-        </p>
-      </div>
-    </div>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-  </body>
-</html>
+{% block title %} Foo {% endblock %} 
+
+{% block content %}
+  <div class="jumbotron">
+    <h1>Who wants food?</h1>
+    <p>GrubHero makes it easy to organize group meal orders.</p>
+    <p>As a hero, you'll create a food menu and an ordering deadline. Users you add to the meal will receive an email where they can</p>
+    <p>
+      <a class="btn btn-lg btn-primary" href="../../components/#navbar">Create a Meal &raquo;</a>
+    </p>
+  </div>
+{% endblock %}

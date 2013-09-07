@@ -12,7 +12,8 @@ VENMO_ACCESS_TOKEN = "eSN3Z3A2KeRbcnNTqgLu6mRA4K9uED9V"
 
 @app.route("/")
 def hello():
-    return render_template('index.html')
+    return render_template('index.html', VENMO_CLIENT_ID=VENMO_OAUTH_CLIENT_ID)
+
 @app.route("/setup")
 def setup():
     oauth_code = request.args.get('code')
@@ -31,8 +32,8 @@ def setup():
         user = response_dict.get('user')
         return '<center>Hey there %s! <br> <img src="%s"> <br> Your access_token is <strong>%s</strong>.' % (user['name'], user['picture'], access_token)
     else:
-        return '<a href="https://sandbox-api.venmo.com/oauth/authorize?client_id=%s&scope=make_payments,access_profile&response_type=code">Click for OAUTH</a>' % VENMO_OAUTH_CLIENT_ID
-
+        return "Error"
+        
 if __name__ == "__main__":
     app.debug = True
     app.run(port=int(sys.argv[1]) if len(sys.argv) > 1 else 80)
