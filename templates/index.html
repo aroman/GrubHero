@@ -1,14 +1,26 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <div class="jumbotron">
-    <h1>Who wants food?</h1>
-    <p>GrubHero makes it easy to organize group meal orders.</p>
-    <p>As a hero, you'll create a food menu and an ordering deadline.<br />
-      Users you add to the meal will receive an email where they can</p>
-    <p><h2 style="margin-bottom: 20px;">Let's make a meal.</h2></p>
-    <p>
-      <a class="btn btn-lg btn-info" href="#">Sign In With <img class="venmo-logo-medium" src="{{ url_for('static', filename='images/venmo-white.png') }}" /> &raquo;</a>
-    </p>
+  <div class="row">
+    <div class="col-xs-4">
+      <div class="mh-block">
+        <h1>My Meals</h1>
+        <em>No meals created.</em>
+      </div>
+      <div class="mh-block">
+        <h1>Active Orders</h1>
+        <em>Your are not currently running any orders.</em>
+      </div>
+      <div class="mh-block">
+        <h1>My Orders</h1>
+        <em>You have no current meal orders.</em>
+      </div>
+    </div>
+    <div class="col-xs-8">
+      <div class="mh-block">
+        <h1>Activity Feed</h1>
+        Foobar.
+      </div>
+    </div>
   </div>
 {% endblock %}
