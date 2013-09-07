@@ -137,6 +137,7 @@ def setup():
             user_from_db['email'] = user['email']
             user_from_db['picture'] = user['picture']
             user_from_db['last_visit'] = datetime.utcnow()
+            mongo.db.users.save(user_from_db)
         else:
             print "User has NOT used GrubHero before. Making account in DB."
             mongo.db.users.insert({
@@ -155,15 +156,6 @@ def setup():
         session['firstname'] = user['firstname']
         session['lastname'] = user['lastname']
         session['photo_url'] = user['picture']
-        user = {
-            "venmo_id": user['id'],
-            "access_token": access_token,
-            "firstname": user['firstname'],
-            "lastname": user['lastname'],
-            "picture": user['picture'],
-            "last_visit": datetime.utcnow()
-        }
-        mongo.db.users.insert(user)
 
         if 'return_url' in session and session['return_url']:
             url = session['return_url']
