@@ -53,6 +53,12 @@ img.venmo-logo-medium {
   border-top-right-radius: 4px;
 }
 
+h1 > .pull-right {
+  position: relative;
+  bottom: 3px;
+  left: 4px;
+}
+
 img.nav-avatar {
   height: 20px;
   border-radius: 4px;
