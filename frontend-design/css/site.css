@@ -17,3 +17,8 @@ body {
 .logo-orange {
   color: #f48845;
 }
+
+img.venmo-logo {
+  height: 10px;
+  margin-bottom: 3px;
+}
