@@ -1,0 +1,19 @@
+@import url(http://fonts.googleapis.com/css?family=Exo:200,400,600);
+
+body {
+  padding-top: 15px;
+}
+
+.navbar-brand {
+  font-family: exo, sans-serif;
+  font-weight: 600;
+  color: black;
+}
+
+.navbar-brand:hover {
+  color: black !important;
+}
+
+.logo-orange {
+  color: #f48845;
+}
