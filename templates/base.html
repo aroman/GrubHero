@@ -2,6 +2,7 @@
 <html>
   <head>
     <title>{% block title %}Who wants food?{% endblock %}</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.png') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/site.css') }}" />
     {% block head %}
