@@ -66,3 +66,15 @@ img.nav-avatar {
   margin-right: 3px;
   position: relative;
 }
+
+.mh-block .form-control {
+  margin-top: 6px;
+}
+
+.mh-block > .label.label-danger {
+  display: block;
+  margin-top: 6px;
+  font-size: 12px;
+  font-weight: normal;
+  background-color: #D9531F;
+}
