@@ -53,8 +53,11 @@ def setup():
         user = response_dict.get('user')
         pp(user)
         session['venmo_id'] = user['id']
+        session['email'] = user['email']
+        session['username'] = user['username']
         session['firstname'] = user['firstname']
         session['lastname'] = user['lastname']
+        session['photo_url'] = user['picture']
         user = {
             "venmo_id": user['id'],
             "likes_hacking": True,

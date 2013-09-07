@@ -15,13 +15,9 @@
           <a class="navbar-brand" href="#"><span class="logo-orange">Grub</span>Hero</a>
         </div>
         <div class="navbar-collapse collapse">
-          <ul class="nav navbar-nav">
-            <li><a href="meals">Meals</a></li>
-            <li><a href="meals/new">Create Meal</a></li>
-          </ul>
           <ul class="nav navbar-nav navbar-right">
             {% if logged_in %}
-              <li><a href="user/{{ session.venmo_id }}">{{ session.firstname }} {{ session.lastname }}</a></li>
+              <li><a href="user/{{ session.venmo_id }}"><img class="nav-avatar" src="{{ session.photo_url }}" /> {{ session.firstname }} {{ session.lastname }}</a></li>
               <li><a href="logout">Sign Out</a></li>
             {% else %}
               <li><a href="https://sandbox-api.venmo.com/oauth/authorize?client_id={{ VENMO_CLIENT_ID }}&scope=make_payments,access_profile&response_type=code">Sign In with <img class="venmo-logo" src="{{ url_for('static', filename='images/venmo.png') }}" /></a></li>
