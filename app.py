@@ -45,16 +45,12 @@ class MLStripper(HTMLParser):
 def strip_tags(html):
     """Removes HTML tags, and strips leading/trailing whitespace."""
     s = MLStripper()
-    s.feed(clean_whitespace(html))
+    s.feed(html.strip())
     return s.get_data()
 
 def single_line(text):
-    """Puts text on a single line, and cleans up whitespace."""
-    return clean_whitespace(text).replace("\r\n", "\n").replace("\n", " ");
-
-def clean_whitespace(text):
     """Removes redundant whitespace, and strips leading/trailing whitespace."""
-    return " ".join(text.split())
+    return " ".join(text.strip().split())
 
 @app.route("/")
 def index():
@@ -199,7 +195,7 @@ def new_meal():
         form_data['name'] = single_line(strip_tags(request.form['name']))
 
     if 'description' in request.form and request.form['description']:
-        form_data['description'] = single_line(strip_tags(request.form['description']))
+        form_data['description'] = strip_tags(request.form['description'])
 
     if 'deadline' in request.form and request.form['deadline']:
         form_data['deadline'] = datetime.strptime(
