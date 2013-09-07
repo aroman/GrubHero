@@ -22,3 +22,8 @@ img.venmo-logo {
   height: 10px;
   margin-bottom: 3px;
 }
+
+img.venmo-logo-medium {
+  height: 13px;
+  margin-bottom: 4px;
+}
