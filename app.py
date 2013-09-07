@@ -5,12 +5,15 @@ import datetime
 from flask import Flask, request, render_template, session, redirect, url_for
 from flask.ext.pymongo import PyMongo
 import sys
+from HTMLParser import HTMLParser
+from datetime import datetime
 
 app = Flask(__name__)
 app.config['MONGO_URI'] = "mongodb://thehero:thepassword@ds043338.mongolab.com:43338/grubhero-dev"
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT' # cookie-session
 mongo = PyMongo(app)
 
+JQUERY_TIME_FORMAT = "%m/%d/%Y %I:%M %p"
 
 VENMO_OAUTH_CLIENT_ID = "1354"
 VENMO_OAUTH_CLIENT_SECRET = "GakFMxSFCEwWQ8bzYb3RLuJGwmkTBNPE"
@@ -19,6 +22,30 @@ VENMO_OAUTH_URL = "https://sandbox-api.venmo.com/oauth/authorize?client_id=%s&sc
 
 def logged_in():
     return 'venmo_id' in session
+
+# http://stackoverflow.com/a/925630
+class MLStripper(HTMLParser):
+    def __init__(self):
+        self.reset()
+        self.fed = []
+    def handle_data(self, d):
+        self.fed.append(d)
+    def get_data(self):
+        return ''.join(self.fed)
+
+def strip_tags(html):
+    """Removes HTML tags, and strips leading/trailing whitespace."""
+    s = MLStripper()
+    s.feed(clean_whitespace(html))
+    return s.get_data()
+
+def single_line(text):
+    """Puts text on a single line, and cleans up whitespace."""
+    return clean_whitespace(text).replace("\r\n", "\n").replace("\n", " ");
+
+def clean_whitespace(text):
+    """Removes redundant whitespace, and strips leading/trailing whitespace."""
+    return " ".join(text.split())
 
 @app.route("/")
 def index():
@@ -145,21 +172,40 @@ def new_meal():
     form_data = {}
     errors = {}
 
-    required_fields = [
-        "name",
-        "deadline",
-        "users",
-        "meal_data",
-    ]
+    # Required fields
+
+    required_fields = {
+        "name": "A meal name must be specified.",
+        "deadline": "An ordering deadline must be specified.",
+        "users": "You must add some users to this meal.",
+        "menu": "Menu options must be specified.",
+    }
+
+    # Parse / sanitize inputs
+
+    if 'name' in request.form and request.form['name']:
+        form_data['name'] = single_line(strip_tags(request.form['name']))
+
+    if 'description' in request.form and request.form['description']:
+        form_data['description'] = single_line(strip_tags(request.form['description']))
+
+    if 'deadline' in request.form and request.form['deadline']:
+        form_data['deadline'] = datetime.strptime(
+            request.form['deadline'], JQUERY_TIME_FORMAT)
+        form_data['deadline'].strftime("%Y")
+
+    # Error messages for missing required fields
 
     if request.method == 'POST':
-        for field in required_fields:
-            if field not in request.form:
-                errors[field] = "This field is required."
+        for field, error_msg in required_fields.iteritems():
+            if (field not in form_data or not form_data[field]
+                    and field not in errors):
+                errors[field] = error_msg
 
     return render_template('create_meal.html',
         logged_in=True,
         form_data=form_data,
+        JQUERY_TIME_FORMAT=JQUERY_TIME_FORMAT,
         errors=errors)
         
 @app.route("/logout")
