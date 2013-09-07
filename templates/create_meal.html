@@ -6,15 +6,15 @@
   <div class="row">
     <div class="col-xs-4">
       <div class="mh-block">
-        <h1>Foo/h1>
+        <h1>Meal Info</h1>
       </div>
       <div class="mh-block">
-        <h1>Bar</h1>
+        <h1>Invited Users</h1>
       </div>
     </div>
     <div class="col-xs-8">
       <div class="mh-block">
-        <h1>Foo</h1>
+        <h1>Menu</h1>
         Foobar.
       </div>
     </div>
@@ -23,6 +23,7 @@
 
 {% block javascript %}
   $('#basic_example_3').datetimepicker({
+    controlType: 'select',
     timeFormat: "hh:mm tt"
   });
 {% endblock %}
