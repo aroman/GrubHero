@@ -1,12 +1,16 @@
 from pprint import pprint as pp
 import requests
 import flask
+import datetime
 from flask import Flask, request, render_template, session, redirect, url_for
+from flask.ext.pymongo import PyMongo
 import sys
 
 app = Flask(__name__)
-# For sessions
-app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
+app.config['MONGO_URI'] = "mongodb://thehero:thepassword@ds043338.mongolab.com:43338/grubhero-dev"
+app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT' # cookie-session
+mongo = PyMongo(app)
+
 
 VENMO_OAUTH_CLIENT_ID = "1354"
 VENMO_OAUTH_CLIENT_SECRET = "GakFMxSFCEwWQ8bzYb3RLuJGwmkTBNPE"
@@ -14,7 +18,9 @@ VENMO_ACCESS_TOKEN = "eSN3Z3A2KeRbcnNTqgLu6mRA4K9uED9V"
 
 @app.route("/")
 def index():
-    if 'venmo-id' in session:
+    if 'venmo_id' in session:
+        pp(session)
+        print session['firstname']
         return render_template('index.html',
             logged_in=True,
             VENMO_CLIENT_ID=VENMO_OAUTH_CLIENT_ID)
@@ -39,18 +45,29 @@ def setup():
         response = requests.post(url, data)
         response_dict = response.json()
         pp(response_dict)
+
+        error = response_dict.get('error')
+        if error:
+            return "Error from Venmo OAUTH: %s" % error
         access_token = response_dict.get('access_token')
         user = response_dict.get('user')
-        session['venmo-id'] = response_dict.get('venmo-id')
-        session['firstname'] = response_dict.get('firstname')
-        session['lastname'] = response_dict.get('lastname')
+        pp(user)
+        session['venmo_id'] = user['id']
+        session['firstname'] = user['firstname']
+        session['lastname'] = user['lastname']
+        user = {
+            "venmo_id": user['id'],
+            "likes_hacking": True,
+            "last_visit": datetime.datetime.utcnow()
+        }
+        mongo.db.users.insert(user)
         return redirect(url_for('index'))
     else:
         return "Error"
         
 @app.route("/logout")
 def logout():
-    session.pop('venmo-id', None)
+    session.pop('venmo_id', None)
     return redirect(url_for('index'))
 
 if __name__ == "__main__":
