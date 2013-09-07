@@ -9,30 +9,30 @@
 	"entries": [
 		{
 			"name": "General Tso's Chicken",
-			"price": "9.50"
+			"price": 9.50
 		},
 		{
 			"name": "Chicken w/ Broccoli",
-			"price": "7.00"
+			"price": 7.00
 		},
 		{
 			"name": "Bento Box",
-			"price": "10.75"
+			"price": 10.75
 		},
 		{
 			"name": "White Rice",
-			"price": "5.00"
+			"price": 5.00
 		},
 		{
 			"separator": true,
 		},
 		{
 			"name": "Springroll",
-			"price": "1.50"
+			"price": 1.50
 		},
 		{
 			"name": "Brown rice",
-			"price": "5.00"
+			"price": 5.00
 		}
 	],
 	"participants": [
