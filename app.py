@@ -20,16 +20,30 @@ VENMO_ACCESS_TOKEN = "eSN3Z3A2KeRbcnNTqgLu6mRA4K9uED9V"
 def index():
     if 'venmo_id' in session:
         pp(session)
-        print session['firstname']
+
         return render_template('index.html',
             logged_in=True,
+            meals=mongo.db.meals.find(),
             VENMO_CLIENT_ID=VENMO_OAUTH_CLIENT_ID)
     else:
         return render_template('index_logged_out.html',
          VENMO_CLIENT_ID=VENMO_OAUTH_CLIENT_ID)
 
-# user = None
-# user.email
+
+@app.route("/create_meal/<name>")
+def create_meal(name):
+    if 'venmo_id' in session:
+        meal = {
+            "hero_venmo_id": session['venmo_id'],
+            "name": name,
+            "description": "Because finals are tomorrow",
+            "deadline": datetime.datetime(2013, 9, 8, 18),
+            "paid": False
+        }
+        mongo.db.meals.insert(meal)
+        return 'Meal with name %s created. <a href="/">Go home</a>' % name
+    else:
+        return redirect(url_for('index'))
 
 @app.route("/setup")
 def setup():
@@ -44,14 +58,11 @@ def setup():
         url = "https://api.venmo.com/oauth/access_token"
         response = requests.post(url, data)
         response_dict = response.json()
-        pp(response_dict)
-
         error = response_dict.get('error')
         if error:
             return "Error from Venmo OAUTH: %s" % error
         access_token = response_dict.get('access_token')
         user = response_dict.get('user')
-        pp(user)
         session['venmo_id'] = user['id']
         session['email'] = user['email']
         session['username'] = user['username']
@@ -60,14 +71,25 @@ def setup():
         session['photo_url'] = user['picture']
         user = {
             "venmo_id": user['id'],
-            "likes_hacking": True,
+            "access_token": access_token,
+            "firstname": user['firstname'],
+            "lastname": user['lastname'],
+            "picture": user['picture'],
             "last_visit": datetime.datetime.utcnow()
         }
         mongo.db.users.insert(user)
         return redirect(url_for('index'))
     else:
         return "Error"
-        
+
+@app.route("/user/<venmo_id>")
+def user(venmo_id):
+    if 'venmo_id' in session:
+        person = mongo.db.users.find_one_or_404({"venmo_id": venmo_id})
+        return render_template('user.html', person=person, logged_in=True)
+    else:
+        return redirect(url_for('index'))
+
 @app.route("/logout")
 def logout():
     session.pop('venmo_id', None)
