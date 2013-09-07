@@ -7,7 +7,15 @@
         <h1>My Meals <span class="pull-right">
           <a href="/meals/new" class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-plus-sign"></span> New Meal</a>
         </span></h1>
-        <em>No meals created.</em>
+        {% if meals %}
+          <ul>
+            {% for meal in meals %}
+              <li>{{meal.name}}</li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <em>No meals created.</em>
+        {% endif %}
       </div>
       <div class="mh-block">
         <h1>My Orders</h1>
