@@ -58,15 +58,38 @@ def index():
         pp(session)
 
         # Meals for which logged in user is the hero
-        meals = mongo.db.meals.find({"hero_venmo_id": session['venmo_id']})
+        my_meals = mongo.db.meals.find({"hero_venmo_id": session['venmo_id']})
 
         # Orders which the user has placed in other meals
-        # orders = mongo.db.meals.find({})
+        meals_with_orders = mongo.db.meals.find({"participants":
+            {"$elemMatch": {"venmo_id": session['venmo_id']}}
+        })
+
+        orders = []
+        for meal_with_order in meals_with_orders:
+            me = None
+            for participant in meal_with_order['participants']:
+                if participant['venmo_id'] ==  session['venmo_id']:
+                    me = participant
+                    break
+            order_entries = []
+            for i, order in enumerate(me['orders']):
+                if 'separator' in meal_with_order['entries'][order['entry_index']]:
+                    continue
+                order_entries.append(meal_with_order['entries'][order['entry_index']]['name'])
+            tease = ", ".join(order_entries)
+            to_append = {
+                "name": meal_with_order['name'],
+                "entries": order_entries,
+                "tease": tease,
+                "paid": meal_with_order['paid']
+            }
+            orders.append(to_append)
 
         return render_template('index.html',
             logged_in=True,
-            meals=meals,
-            orders=None, # not implemented
+            meals=my_meals,
+            orders=orders,
             VENMO_CLIENT_ID=VENMO_OAUTH_CLIENT_ID,
             VENMO_OAUTH_URL=VENMO_OAUTH_URL)
     else:
@@ -105,7 +128,7 @@ def create_meal(name):
 def setup():
     oauth_code = request.args.get('code')
     if oauth_code:
-        url = "https://api.venmo.com/oauth/access_token"
+        url = "https://sandbox-api.venmo.com/oauth/access_token"
         data = {
             "client_id": VENMO_OAUTH_CLIENT_ID,
             "client_secret": VENMO_OAUTH_CLIENT_SECRET,
@@ -128,6 +151,7 @@ def setup():
 
         if user_from_db:
             print "User has used GrubHero before; we have them in the DB."
+            user_from_db['access_token'] = access_token
             user_from_db['firstname'] = user['firstname']
             user_from_db['lastname'] = user['lastname']
             user_from_db['email'] = user['email']
@@ -215,6 +239,40 @@ def new_meal():
         form_data=form_data,
         JQUERY_TIME_FORMAT=JQUERY_TIME_FORMAT,
         errors=errors)
+
+@app.route("/bbq")
+def lolwtfbbq():
+    le_meal = mongo.db.meals.find_one({"name": "Le Chinese Dinner"})
+    charge_meal(le_meal)
+    return "TROLOLOLOLOLOL"
+
+def charge_meal(meal):
+    print "Charging meal %s" % meal['name']
+    hero = mongo.db.users.find_one({"venmo_id": meal['hero_venmo_id']})
+    print "Hero: %s" % hero['firstname'] 
+    for participant in meal['participants']:
+        print "Participant %s" % participant['venmo_id']
+        total = 0
+        for i, order in enumerate(participant['orders']):
+            entry = meal['entries'][i]
+            print "Ordered %i %s at %.2f each" % (
+                order['quantity'],
+                entry['name'], 
+                entry['price']
+            )
+            print "Adding %.2f to total" % entry['price'] * order['quantity']
+            total += entry['price'] * order['quantity']
+        print "Total for this person: %.2f" % total
+        url = "https://sandbox-api.venmo.com/payments"
+        data = {
+            "access_token": hero['access_token'],
+            "user_id": "153136" or participant['venmo_id'],
+            "note": "%s (via GrubHero)" % meal['name'],
+            "amount": -0.10 or -total
+        }
+        pp(data)
+        response = requests.post(url, data)
+        pp(response.json())
         
 @app.route("/logout")
 def logout():
