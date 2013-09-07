@@ -1,7 +1,7 @@
 from pprint import pprint as pp
 import requests
 import flask
-from flask import Flask, request
+from flask import Flask, request, render_template
 
 app = Flask(__name__)
 
@@ -11,8 +11,7 @@ VENMO_ACCESS_TOKEN = "eSN3Z3A2KeRbcnNTqgLu6mRA4K9uED9V"
 
 @app.route("/")
 def hello():
-    return 'Welcome to GrubHero, you are on the homepage<br><a href="/setup">Set up new account</a>'
-
+    return render_template('index.html')
 @app.route("/setup")
 def setup():
     oauth_code = request.args.get('code')
