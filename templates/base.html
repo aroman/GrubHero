@@ -15,11 +15,16 @@
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-            <li><a href="#">Meal Types</a></li>
-            <li><a href="#">Create Meal</a></li>
+            <li><a href="meals">Meals</a></li>
+            <li><a href="meals/new">Create Meal</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="https://sandbox-api.venmo.com/oauth/authorize?client_id={{ VENMO_CLIENT_ID }}&scope=make_payments,access_profile&response_type=code">Sign In with <img class="venmo-logo" src="{{ url_for('static', filename='images/venmo.png') }}" /></a></li>
+            {% if logged_in %}
+              <li>Signed in as {{ session.firstname }} {{ session.lastname }}</li>
+              <li><a href="logout">Sign Out</a></li>
+            {% else %}
+              <li><a href="https://sandbox-api.venmo.com/oauth/authorize?client_id={{ VENMO_CLIENT_ID }}&scope=make_payments,access_profile&response_type=code">Sign In with <img class="venmo-logo" src="{{ url_for('static', filename='images/venmo.png') }}" /></a></li>
+            {% endif %}
           </ul>
         </div>
       </div>
