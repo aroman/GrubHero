@@ -61,35 +61,33 @@ def setup():
         if error:
             return "Error from Venmo OAUTH: %s" % error
         access_token = response_dict.get('access_token')
-        user = response_dict.get('user')
 
+        user = response_dict.get('user')
         print "User from venmo oauth:"
         pp(user)
-        user_from_db = mongo.db.users.find_one({"venmo_id": user['id']})
 
+        user_from_db = mongo.db.users.find_one({"venmo_id": user['id']})
         print "User from db:"
         pp(user_from_db)
 
         if user_from_db:
             print "User has used GrubHero before; we have them in the DB."
-            user = user_from_db
-            mongo.db.users.update({"venmo_id": user['id']}, {
-                "firstname": user['firstname'],
-                "lastname": user['lastname'],
-                "picture": user['picture'],
-                "last_visit": datetime.datetime.utcnow(),
-            })
+            user_from_db['firstname'] = user['firstname']
+            user_from_db['lastname'] = user['lastname']
+            user_from_db['email'] = user['email']
+            user_from_db['picture'] = user['picture']
+            user_from_db['last_visit'] = datetime.datetime.utcnow()
         else:
             print "User has NOT used GrubHero before. Making account in DB."
-            user = {
+            mongo.db.users.insert({
                 "venmo_id": user['id'],
                 "access_token": access_token,
                 "firstname": user['firstname'],
                 "lastname": user['lastname'],
+                "email": user['email'],
                 "picture": user['picture'],
                 "last_visit": datetime.datetime.utcnow()
-            }
-            mongo.db.users.update({"venmo_id": user['id'], })
+            })
 
         session['venmo_id'] = user['id']
         session['email'] = user['email']
@@ -119,9 +117,6 @@ def new_meal():
         "deadline_time",
         
     ]
-
-    if request.method == 'POST':
-        if ()
 
     return render_template('create_meal.html', form_data, errors)
         
