@@ -131,7 +131,11 @@ def index():
         })
 
         # For activity stream
-        activities = mongo.db.activities.find().limit(10)
+        activities = list(mongo.db.activities.find().limit(10))
+
+        for a in activities:
+            a['when_fuzzy'] = relativeTime(a['when'])
+        pp(activities)
 
         orders = []
         for meal_with_order in meals_with_orders:
@@ -411,6 +415,29 @@ def total_for_meal():
             total += sum(map(lambda i: i['quantity'] * meal['entries'][i['entry_index']]['price'], p['orders']))
         return total
     return dict(total_for_meal=func)
+
+def relativeTime(date):
+    date = date.replace(tzinfo=None)
+    diff = datetime.now() - date
+
+    if diff.days > 7 or diff.days < 0:
+        return date.ctime()
+    elif diff.days == 1:
+        return '1 day ago'
+    elif diff.days > 1:
+        return '%d days ago' % diff.days
+    elif diff.seconds <= 1:
+        return 'just now'
+    elif diff.seconds < 60:
+        return '%d seconds ago' % diff.seconds
+    elif diff.seconds < (60 * 2):
+        return '1 minute ago'
+    elif diff.seconds < (60 * 60):
+        return '%d minutes ago' % (diff.seconds / 60)
+    elif diff.seconds < (60 * 60 * 2):
+        return '1 hour ago'
+    else:
+        return '%d hours ago' % (diff.seconds / (60 * 60))
 
 if __name__ == "__main__":
     app.debug = True
