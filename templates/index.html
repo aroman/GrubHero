@@ -17,9 +17,9 @@
           <a href="/meals/new" class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-plus-sign"></span> New Meal</a>
         </span></h1>
         {% if meals %}
-          <ul>
+          <ul class="meal-list-style">
             {% for meal in meals %}
-              <li><a href="/order/{{meal._id}}">{{meal.name}}</a></li>
+              <li><a href="/order/{{meal._id}}">{{meal.name}} ({{meal.participants|length}}/{{meal.invited|length}})</a></li>
             {% endfor %}
           </ul>
         {% else %}
@@ -29,9 +29,9 @@
       <div class="mh-block">
         <h1>My Orders</h1>
         {% if orders %}
-          <ul>
+          <ul class="order-list-style">
             {% for order in orders %}
-              <li>{{order.name}} - {{order.tease}}</li>
+              <li class="{% if order.paid %}order-paid{% endif %}">{{order.name}} - {{order.tease}}</li>
             {% endfor %}
           </ul>
         {% else %}
