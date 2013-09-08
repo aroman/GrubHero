@@ -96,7 +96,6 @@ def order(meal_id):
 
         mongo.db.activities.insert({
             "type": "ordered",
-            "actor_venmo_id": user['id'],
             "username": participant['username'],
             "picture": participant['picture'],
             "firstname": participant['firstname'],
