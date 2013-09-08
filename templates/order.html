@@ -28,7 +28,7 @@
                 </span></h2>
               </div>
             {% endif %}
-          {% endfor %}
+          {% endfor %}f
           <hr />
           <input type="submit" value="Save Order" class="btn btn-danger btn-order-submit" disabled="disabled" />
           <h3 class="total-cost-container">Total Cost: <span class="total-cost">$0.00</span></h3>
@@ -37,7 +37,16 @@
       <div class="col-sm-4 col-sm-pull-8 col-xs-12">
         <div class="mh-block">
           <h1>Participants</h1>
-          <em>You're the first one!</em>
+          {% if meal.participants %}
+            <ul class="participants-list-style">
+              {% for participant in meal.participants %}
+                <li><img class="participant-image" src="{{participant.picture}}"><div class="participant-text"> {{participant.firstname}} {{participant.lastname}}
+                <br><em>Ordered <div class="date-humanize">{{participant.ordered}}</div></em></div></div></li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            <em>Nobody else has placed an order yet.</em>
+          {% endif %}
         </div>
       </div>
     </div>
@@ -86,5 +95,14 @@
       else
        $("#order-form input[type=submit]").prop("disabled", "disabled");
     }
+
+    $(".date-humanize").each(function(i, e) {
+      datetime_string = e.innerHTML;
+      m = moment(datetime_string).zone("-4:00"); // DESPICABLE EVIL
+      // console.log(m.format("dddd, MMMM Do YYYY, h:mm:ss a"))
+      // console.log(m.fromNow())
+      q = moment(m).fromNow()
+      $(e).html(q)
+    });
   })
 {% endblock %}

@@ -22,6 +22,7 @@ while True:
 			print "    Sending an email to the meal's hero, %s..." % hero["email"]
 			subject = "The deadline to order %s has passed!" % (meal['name'])
 			body = mailer.deadline_reached_template(meal, hero)
+			# lol u mad bro?
 			url = "https://sendgrid.com/api/mail.send.json?api_user=aviromanoff&api_key=pennapps2013&to=%s&subject=%s&html=%s&from=liazon@grubhero.com&fromname=GrubHero" % (hero['email'], subject, body)
 			response = requests.post(url)
 			pp(response.json())
