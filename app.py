@@ -62,7 +62,57 @@ def order(meal_id):
 
     #TODO - Use actual meal data, not dummy data
     meal = {
-        "name": "Wings Over Wednesday",
+        "name": "Chinese Night",
+        "description": "Because finals are tomorrow.\n\nYay!",
+        "hero_venmo_id": "123456",
+        "deadline": {
+            "$date": "2013-09-08T18:00:00.000Z"
+        },
+        "paid": "false",
+        "entries": [
+            {
+                "name": "General Tso's Chicken",
+                "price": 9.50
+            },
+            {
+                "name": "Chicken w/ Broccoli",
+                "price": 7.00
+            },
+            {
+                "name": "Bento Box",
+                "price": 10.75
+            },
+            {
+                "name": "White Rice",
+                "price": 5.00
+            },
+            {
+                "separator": "true",
+            },
+            {
+                "name": "Springroll",
+                "price": 1.50
+            },
+            {
+                "name": "Brown rice",
+                "price": 5.00
+            }
+        ],
+        "participants": [
+            {
+                "venmo_id": "123456",
+                "orders": [
+                    {
+                        "entry_index": 2,
+                        "quantity": 1
+                    },
+                    {
+                        "entry_index": 4,
+                        "quantity": 2
+                    }
+                ]
+            }
+        ]
     }
 
     form_data = {}
