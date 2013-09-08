@@ -1,18 +1,45 @@
 {% extends "base.html" %}
 
+<!--         <span>As a hero, you'll create a food menu and an ordering deadline. Users you add to the meal will receive an email where they can choose their order. Payments will automatically be gathered via Venmo.</span> -->
+
 {% block content %}
   <div class="mh-block">
     <div class="row">
-      <div class="col-xs-5" style="padding-left: 40px; font-size: 16px;">
-        <h2>Who wants food?</h2>
-        <p>GrubHero makes it easy to organize group meal orders.</p>
-        <p>As a hero, you'll create a food menu and an ordering deadline. Users you add to the meal will receive an email where they can choose their order. Payments will automatically be gathered via Venmo.</p>
+      <div style="text-align:center">
+        <h2 style="font-size: 50px">Who wants food?</h2>
+        <p style="font-size: 24px">Organizing group meal orders has never been this easy.</p>
       </div>
-      <div class="col-xs-2" style="text-align: center;">
-        <img src="{{ url_for('static', filename='images/full_logo.svg') }}" style="width: 100%;" />
+    </div>
+
+    <div class="row" style="margin-top: 25px">
+
+      <div class="col-md-4" style="font-size: 16px;">
+        <div style="text-align:center">
+          <span style="font-size:40px; padding-top: 75px; margin-bottom: 5px" class="glyphicon glyphicon-cutlery"></span>
+          <p>Create a menu for your friends in one minute</p>
+          <br>
+          <img src="{{ url_for('static', filename='images/v.png') }}" style="height: 40px;margin-top:50px;margin-bottom:3px" />
+          <p>Collect money painlessly with Venmo.</p>
+        </div>
       </div>
-      <div class="col-xs-5" style="text-align: center;">
-        <p><h2 style="margin-bottom: 20px;">Let's make a meal.</h2></p>
+
+      <div class="col-md-4" style="text-align:center">
+        <img src="{{ url_for('static', filename='images/full_logo.svg') }}" style="height: 350px;" />
+      </div>
+
+      <div class="col-md-4" style="font-size: 16px;">
+        <div style="text-align:center">
+          <span style="font-size:40px; padding-top: 75px; margin-bottom: 5px" class="glyphicon glyphicon-inbox"></span>
+          <p>Instant email notifications.</p>
+          <br>
+          <span style="font-size:40px; padding-top: 50px; margin-bottom: 5px" class="glyphicon glyphicon-list"></span>
+          <p>Review the order before you purchase.</p>
+        </div>
+      </div>
+
+    </div>
+    <div class="row">
+      <div class="col-5" style="text-align: center;margin-top:35px; margin-bottom:35px">
         <p>
           <a class="btn btn-lg btn-info" href="{{ VENMO_OAUTH_URL }}">Sign In With <img class="venmo-logo-medium" src="{{ url_for('static', filename='images/venmo-white.png') }}" /> &raquo;</a>
         </p>
