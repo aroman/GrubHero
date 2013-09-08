@@ -410,7 +410,7 @@ def charge_meal(meal_id):
         "when": datetime.utcnow()
     })
 
-    flash("Charged %s participants!" % meal['name']
+    flash("Charged %s participants!" % meal['name'])
     return redirect(url_for('index'))
         
 @app.route("/logout")
