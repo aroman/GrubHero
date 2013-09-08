@@ -134,6 +134,7 @@ def index():
         activities = list(mongo.db.activities.find().limit(10))[::-1]
 
         for a in activities:
+            pp(a)
             a['when_fuzzy'] = relativeTime(a['when'])
         pp(activities)
 
@@ -214,7 +215,7 @@ def setup():
                 "picture": user['picture'],
                 "last_visit": datetime.utcnow()
             })
-            mongo.db.activities.insert({
+            act_id = mongo.db.activities.insert({
                 "type": "joined",
                 "username": user['username'],
                 "firstname": user['firstname'],
@@ -223,6 +224,8 @@ def setup():
                 "actor_venmo_id": user['id'],
                 "when": datetime.utcnow()
             })
+            print "THIS IS FROM SETUP"
+            pp(mongo.db.activities.find_one(act_id)['when'])
 
         session['venmo_id'] = user['id']
         session['email'] = user['email']
@@ -428,6 +431,10 @@ def total_for_meal():
     return dict(total_for_meal=func)
 
 def relativeTime(date):
+    pp(datetime.utcnow())
+    print "-"
+    pp(date)
+    date = date.replace(tzinfo=None)
     diff = datetime.utcnow() - date
 
     if diff.days > 7 or diff.days < 0:
