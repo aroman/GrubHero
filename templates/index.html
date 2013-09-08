@@ -19,7 +19,7 @@
         {% if meals %}
           <ul>
             {% for meal in meals %}
-              <li>{{meal.name}}</li>
+              <li><a href="/order/{{meal._id}}">{{meal.name}}</a></li>
             {% endfor %}
           </ul>
         {% else %}
