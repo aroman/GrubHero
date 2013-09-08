@@ -263,6 +263,7 @@ def new_meal():
             meal = {
                 "hero_venmo_id": session['venmo_id'],
                 "name": form_data['name'],
+                "description": form_data['description'],
                 "deadline": form_data['deadline'],
                 "invited": form_data['users'],
                 "participants": [],
