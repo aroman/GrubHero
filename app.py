@@ -158,7 +158,7 @@ def index():
 
         return render_template('index.html',
             logged_in=True,
-            meals=my_meals,
+            meals=list(my_meals),
             orders=orders,
             activities=list(activities),
             VENMO_CLIENT_ID=VENMO_OAUTH_CLIENT_ID,
