@@ -53,6 +53,31 @@ def single_line(text):
     """Removes redundant whitespace, and strips leading/trailing whitespace."""
     return " ".join(text.strip().split())
 
+@app.route("/order/<int:meal_id>")
+def order(meal_id):
+    if not logged_in():
+        session['return_url'] = request.url
+        return redirect(VENMO_OAUTH_URL)
+    #TODO - Check here if user's session's email is in the list of meal invitees
+
+    #TODO - Use actual meal data, not dummy data
+    meal = {
+        "name": "Wings Over Wednesday",
+    }
+
+    form_data = {}
+    errors = {}
+
+    if 'comment' in request.form and request.form['comment']:
+        form_data['comment'] = single_line(strip_tags(request.form['comment']))
+
+    #TODO - Parse order JSON data
+    if 'order' in request.form and request.form['order']:
+        form_data['order'] = request.form['order']
+
+    return render_template('order.html',
+        logged_in=True, meal=meal, errors=errors, form_data=form_data)
+
 @app.route("/")
 def index():
     if logged_in():
