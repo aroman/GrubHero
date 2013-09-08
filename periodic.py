@@ -4,6 +4,8 @@ import pymongo
 import requests
 from pymongo import MongoClient
 from pprint import pprint as pp
+from datetime import date, timedelta
+
 
 import mailer
 
@@ -12,9 +14,13 @@ db = client['grubhero-dev']
 
 while True:
 	now = datetime.datetime.utcnow()
+	fuck=now-timedelta(hours=4)
+	print "Now"
 	pp(now)
+	print "Fuck"
+	pp(fuck)
 	meals = db.meals.find({"sent": False,
-		"deadline": {"$lte": now}})
+		"deadline": {"$lte": fuck}})
 	if meals:
 		print "%i meals have passed their deadlines" % meals.count()
 		for meal in meals:
