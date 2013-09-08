@@ -284,3 +284,30 @@ h1 .total-cost {
   -webkit-box-shadow: inset 1px 1px 1px 0.1px rgba(0, 0, 0, 0.1);
   box-shadow: inset 1px 1px 1px 0.1px rgba(0, 0, 0, 0.1);
 }
+
+.order-paid {
+  text-decoration: line-through;
+}
+
+.meal-list-style, .order-list-style, .participants-list-style {
+  list-style-type: none;
+}
+
+.meal-list-style > li, .order-list-style > li, .participants-list-style > li {
+  font-size: 14px;
+  margin-left: -35px;
+}
+
+.order-list-style > li {
+  text-overflow: ellipsis;
+}
+
+img.participant-image {
+  border-radius: 5px !important;
+  height: 50px;
+}
+
+div.participant-text {
+  float: left;
+  margin-left: -50px;
+}
