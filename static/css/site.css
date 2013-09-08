@@ -338,3 +338,23 @@ div.participant-text {
 .order-page-participant-list > a:first-child {
   border-top-width: 0;
 }
+
+.activity-feed-list {
+  text-align: left;
+  margin-top: -5px;
+  margin-left: -10px;
+  margin-right: -10px;
+  margin-bottom: -10px;
+}
+
+.activity-feed-list > div {
+  border-width: 0;
+  border-top-left-radius: 0 !important;
+  border-top-right-radius: 0 !important;
+  border-top-width: 1px;
+  height: 70px;
+}
+
+.activity-feed-list > div:first-child {
+  border-top-width: 0;
+}

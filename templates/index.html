@@ -44,21 +44,27 @@
         <h1>Activity Feed</h1>
         <center>
           {% if activities %}
-            <ul class="activity-list-style">
+            <div class="list-group activity-feed-list">
               {% for activity in activities %}
-                {% if activity.type == 'joined' %}
-                  <li><a href="http:/venmo.com/{{activity.username}}">{{activity.firstname}} {{activity.lastname}}</a> joined GrubHero. &mdash; {{activity.when}}</li>
-                {% elif activity.type == 'ordered' %}
-                  <li><a href="http:/venmo.com/{{activity.username}}">{{activity.firstname}} {{activity.lastname}}</a> ordered {{meal_name}}. &mdash; {{activity.when}}</li>
-                {% elif activity.type == 'created meal' %}
-                  <li><a href="http:/venmo.com/{{activity.username}}">{{activity.firstname}} {{activity.lastname}}</a> created the meal {{meal_name}}. &mdash; {{activity.when}}</li>
-                {% elif activity.type == 'collected payments' %}
-                  <li><a href="http:/venmo.com/{{activity.username}}">{{activity.firstname}} {{activity.lastname}}</a> collected payments for {{meal_name}}. &mdash; {{activity.when}}</li>
-                {% else %}
-                  <li>{{activity}}</li>
-                {% endif %}
+                <div class="list-group-item">
+                  <a href="http://venmo.com/{{activity.username}}"><img class="participant-image" src="{{activity.picture}}"></a>
+                  <h4 class="list-group-item-heading"><a href="http://venmo.com/{{activity.username}}">{{ activity.firstname }} {{ activity.lastname }}</a></h4>
+                  <p class="list-group-item-text">
+                    {% if activity.type == 'joined' %}
+                      Joined GrubHero. &mdash; <span title="{{activity.when.ctime()}}">{{activity.when_fuzzy}}</span>
+                    {% elif activity.type == 'ordered' %}
+                      Ordered {{meal_name}}. &mdash; <span title="{{activity.when.ctime()}}">{{activity.when_fuzzy}}</span>
+                    {% elif activity.type == 'created meal' %}
+                      Created the meal {{meal_name}}. &mdash; <span title="{{activity.when.ctime()}}">{{activity.when_fuzzy}}</span>
+                    {% elif activity.type == 'collected payments' %}
+                      <Collected payments for {{meal_name}}. &mdash; <span title="{{activity.when.ctime()}}">{{activity.when_fuzzy}}</span>
+                    {% else %}
+                      {{activity}}
+                    {% endif %}
+                  </p>
+                </div>
               {% endfor %}
-            </ul>
+            </div>
           {% else %}
             <br>
             <em>No activities logged yet.</em>
