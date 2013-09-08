@@ -3,6 +3,7 @@ import requests
 import flask
 import datetime
 from flask import Flask, request, render_template, session, redirect, url_for, flash
+import flask_pymongo
 from flask.ext.pymongo import PyMongo
 from flask.ext.mail import Mail, Message
 from bson.objectid import ObjectId
@@ -20,7 +21,6 @@ app.config['MAIL_USERNAME'] = "aviromanoff"
 app.config['MAIL_PASSWORD'] = "pennapps2013"
 app.config['MONGO_URI'] = "mongodb://thehero:thepassword@ds043338.mongolab.com:43338/grubhero-dev"
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT' # cookie-session
-app.config
 mongo = PyMongo(app)
 mail = Mail(app)
 
@@ -284,7 +284,7 @@ def new_meal():
     if 'deadline' in request.form and request.form['deadline']:
         print "Begin"
         pp(request.form['deadline'])
-        
+
         form_data['deadline'] = datetime.strptime(
             request.form['deadline'], JQUERY_TIME_FORMAT)
         pp(form_data['deadline'])
@@ -440,7 +440,7 @@ def relativeTime(date):
     pp(datetime.utcnow())
     print "-"
     pp(date)
-    date = date.replace(tzinfo=None)
+    # date = date.replace(tzinfo=None)
     diff = datetime.utcnow() - date
 
     if diff.days > 7 or diff.days < 0:
