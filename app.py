@@ -363,7 +363,7 @@ def new_meal():
         errors=errors)
 
 @app.route("/charge/<meal_id>")
-def charge_meal(meal_id, total):
+def charge_meal(meal_id):
     meal = mongo.db.meals.find_one_or_404({"_id": ObjectId(meal_id)})
     if meal['hero_venmo_id'] != session['venmo_id']:
         return "YOU AREN'T THIS MEAL's HERO, ASSHOLE."
@@ -410,7 +410,7 @@ def charge_meal(meal_id, total):
         "when": datetime.utcnow()
     })
 
-    flash("Charged participants of %s for a total of %.2f" % (meal['name'], final_total))
+    flash("Charged %s participants!" % meal['name']
     return redirect(url_for('index'))
         
 @app.route("/logout")
