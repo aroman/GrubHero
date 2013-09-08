@@ -53,11 +53,11 @@
                     {% if activity.type == 'joined' %}
                       Joined GrubHero. &mdash; <span title="{{activity.when.ctime()}}">{{activity.when_fuzzy}}</span>
                     {% elif activity.type == 'ordered' %}
-                      Ordered {{meal_name}}. &mdash; <span title="{{activity.when.ctime()}}">{{activity.when_fuzzy}}</span>
+                      Ordered {{activity.meal_name}}. &mdash; <span title="{{activity.when.ctime()}}">{{activity.when_fuzzy}}</span>
                     {% elif activity.type == 'created meal' %}
-                      Created the meal {{meal_name}}. &mdash; <span title="{{activity.when.ctime()}}">{{activity.when_fuzzy}}</span>
+                      Created the meal {{activity.meal_name}}. &mdash; <span title="{{activity.when.ctime()}}">{{activity.when_fuzzy}}</span>
                     {% elif activity.type == 'collected payments' %}
-                      <Collected payments for {{meal_name}}. &mdash; <span title="{{activity.when.ctime()}}">{{activity.when_fuzzy}}</span>
+                      Collected payments for {{activity.meal_name}}. &mdash; <span title="{{activity.when.ctime()}}">{{activity.when_fuzzy}}</span>
                     {% else %}
                       {{activity}}
                     {% endif %}
