@@ -3,7 +3,6 @@ import requests
 import flask
 import datetime
 from flask import Flask, request, render_template, session, redirect, url_for, flash
-import flask_pymongo
 from flask.ext.pymongo import PyMongo
 from flask.ext.mail import Mail, Message
 from bson.objectid import ObjectId
@@ -440,7 +439,7 @@ def relativeTime(date):
     pp(datetime.utcnow())
     print "-"
     pp(date)
-    # date = date.replace(tzinfo=None)
+    date = date.replace(tzinfo=None)
     diff = datetime.utcnow() - date
 
     if diff.days > 7 or diff.days < 0:
