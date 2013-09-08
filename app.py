@@ -212,12 +212,13 @@ def user(venmo_id):
     person = mongo.db.users.find_one_or_404({"venmo_id": venmo_id})
     return render_template('user.html', person=person, logged_in=True)
 
-@app.route("/meals/<meal_id>", methods=["GET"])
-def view_meal():    
+@app.route("/meal/<meal_id>", methods=["GET"])
+def view_meal(meal_id):
     meal = mongo.db.meals.find_one_or_404({'_id': ObjectId(meal_id)})
     if meal['hero_venmo_id'] != session['venmo_id']:
         return "You aren't this meal's hero."
     else:
+        pp(meal)
         return render_template('meal.html',
             logged_in=True,
             meal=meal
