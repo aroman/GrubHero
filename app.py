@@ -382,6 +382,7 @@ def charge_meal(meal_id):
         }
         pp(data)
         response = requests.post(url, data)
+        pp(response)
         pp(response.json())
 
         mongo.db.activities.insert({
