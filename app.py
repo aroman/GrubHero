@@ -396,7 +396,7 @@ def charge_meal(meal_id):
         response = requests.post(url, data)
         pp(response.json())
 
-    meal.paid = True
+    meal['paid'] = True
     mongo.db.meals.save(meal)
     mongo.db.activities.insert({
         "type": "collected payments",
