@@ -169,7 +169,7 @@ def index():
 
 @app.route("/video")
 def video():
-    return redirect("http://vimeo.com/lol")
+    return redirect("http://vimeo.com/8972896")
 
 @app.route("/setup")
 def setup():
