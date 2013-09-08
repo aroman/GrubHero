@@ -169,7 +169,7 @@ img.nav-avatar {
 }
 
 .order-entry h2 {
-  font-size: 18px;
+  font-size: 16px;
 }
 
 .site-flash {
@@ -177,4 +177,39 @@ img.nav-avatar {
   font-size: 16px;
   padding: 5px;
   text-align: center;
+}
+
+.order-entry-quantity-widget {
+  margin-left: 30px;
+}
+
+.btn-dec {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.btn-inc {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.order-entry-quantity {
+  width: 30px;
+  text-align: center;
+  height: 22px;
+  background: #ddd;
+  margin: 0;
+  top: 1px;
+  position: relative;
+  display: inline-block;
+  margin-left: -5px;
+  margin-right: -5px;
+  border-top: solid 1px #999;
+  border-bottom: solid 1px #999;
+}
+
+.btn-order-submit {
+  float: right;
+  position: relative;
+  bottom: 5px;
 }
