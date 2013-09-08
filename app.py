@@ -282,9 +282,14 @@ def new_meal():
         form_data['description'] = strip_tags(request.form['description'])
 
     if 'deadline' in request.form and request.form['deadline']:
+        print "Begin"
+        pp(form_data['deadline'])
         form_data['deadline'] = datetime.strptime(
             request.form['deadline'], JQUERY_TIME_FORMAT)
+        pp(form_data['deadline'])
         form_data['deadline'].strftime("%Y")
+        pp(form_data['deadline'])
+        print "End"
 
     if 'users' in request.form and request.form['users']:
         form_data['users'] = json.loads(request.form['users'])
