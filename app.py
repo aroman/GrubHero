@@ -54,7 +54,7 @@ def single_line(text):
     """Removes redundant whitespace, and strips leading/trailing whitespace."""
     return " ".join(text.strip().split())
 
-@app.route("/order/<meal_id>")
+@app.route("/order/<meal_id>", methods=["POST", "GET"])
 def order(meal_id):
     if not logged_in():
         session['return_url'] = request.url
@@ -65,12 +65,36 @@ def order(meal_id):
     form_data = {}
     errors = {}
 
-    if 'comment' in request.form and request.form['comment']:
-        form_data['comment'] = single_line(strip_tags(request.form['comment']))
+    if request.method == 'POST':
 
-    #TODO - Parse order JSON data
-    if 'order' in request.form and request.form['order']:
-        form_data['order'] = request.form['order']
+        if 'comment' in request.form and request.form['comment']:
+            form_data['comment'] = single_line(strip_tags(request.form['comment']))
+
+        if 'order' in request.form and request.form['order']:
+            form_data['order'] = request.form['order']
+
+        participant = mongo.db.users.find_one({"venmo_id": session['venmo_id']})
+
+        orders = []
+        form_order_items = json.loads(form_data['order'])
+        for i, quantity in form_order_items.iteritems():
+            orders.append({
+                "entry_index": int(i),
+                "quantity": int(quantity)
+            })
+
+        to_append = {
+            "venmo_id": session['venmo_id'],
+            "firstname": participant['firstname'],
+            "lastname": participant['lastname'],
+            "picture": participant['picture'],
+            "orders": orders
+        }
+        meal['participants'].append(to_append)
+        pp(meal)
+        mongo.db.meals.save(meal)
+        flash("Your order for %s has been recorded!" % meal['name'])
+        return redirect(url_for('index'))
 
     return render_template('order.html',
         logged_in=True, meal=meal, errors=errors, form_data=form_data)
@@ -97,8 +121,6 @@ def index():
                     break
             order_entries = []
             for i, order in enumerate(me['orders']):
-                if 'separator' in meal_with_order['entries'][order['entry_index']]:
-                    continue
                 order_entries.append(meal_with_order['entries'][order['entry_index']]['name'])
             tease = ", ".join(order_entries)
             to_append = {
@@ -118,17 +140,6 @@ def index():
     else:
         return render_template('index_logged_out.html',
             VENMO_OAUTH_URL=VENMO_OAUTH_URL)
-
-@app.route("/send_email_to/<target_venmo_id>")
-def send(recipients):
-    sender = mongo.db.users.find_one({"venmo_id": session['venmo_id']})
-    target = mongo.db.users.find_one({"venmo_id": target_venmo_id})
-    msg = Message("%s wants to be your Grub Hero!" % sender['firstname'],
-        sender=("GrubHero", "liazon@grubhero.com"),
-        recipients=recipients)
-    msg.html = mailer.invite_participant_template(sender, target)
-    mail.send(msg)
-    return "Email sent :)"
 
 @app.route("/setup")
 def setup():
