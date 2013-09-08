@@ -2,7 +2,14 @@
 
 {% block content %}
 	<p>
-		Hey {{participant.firstname}},
-		{{hero.firstname}} {{hero.lastname}} wants to be your GrubHero.
+		<h3>Hey there {{participant.firstname}}!</h3>
+
+		{{hero.firstname}} {{hero.lastname}} wants to order {{name}} with you!
+
+		<a href="{{order_url}}"> Click here</a> to let {{hero.firstname}}
+		 know what you want to eat.
+
+		You have until {{deadline}} to do so -- that's when {{hero.firstname}}
+		 will place the order!
 	</p>
 {% endblock %}

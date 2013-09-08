@@ -2,7 +2,7 @@ from pprint import pprint as pp
 import requests
 import flask
 import datetime
-from flask import Flask, request, render_template, session, redirect, url_for
+from flask import Flask, request, render_template, session, redirect, url_for, flash
 from flask.ext.pymongo import PyMongo
 from flask.ext.mail import Mail, Message
 import sys
@@ -272,6 +272,26 @@ def new_meal():
             if (field not in form_data or not form_data[field]
                     and field not in errors):
                 errors[field] = error_msg
+        if not errors:
+            entries = []
+            for menu_item in form_data['menu']:
+                if menu_item['type'] == 'divider':
+                    entries.append({"separator": True})
+                else:
+                    entries.append({"name": menu_item['name'],
+                        "price": menu_item['price']})
+            meal = {
+                "hero_venmo_id": session['venmo_id'],
+                "name": form_data['name'],
+                "deadline": form_data['deadline'],
+                "invited": form_data['users'],
+                "participants": [],
+                "entries": entries,
+                "paid": False 
+            }
+            mongo.db.meals.insert(meal)
+            flash("Meal %s created successfully!" % meal['name'])
+            return redirect(url_for('index'))
 
     return render_template('create_meal.html',
         logged_in=True,
