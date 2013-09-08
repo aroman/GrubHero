@@ -240,7 +240,7 @@ def new_meal():
         remove_items = []
         for item in form_data['menu']:
             if item['type'] == "entry" and (
-                    not item["name"] or not item["price"]):
+                    not item["name"] or item["price"] is None):
                 remove_items.append(item)
         for item in remove_items:
             form_data['menu'].remove(item)
