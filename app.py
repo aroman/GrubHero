@@ -312,13 +312,11 @@ def new_meal():
         JQUERY_TIME_FORMAT=JQUERY_TIME_FORMAT,
         errors=errors)
 
-@app.route("/bbq")
-def lolwtfbbq():
-    le_meal = mongo.db.meals.find_one({"name": "Le Chinese Dinner"})
-    charge_meal(le_meal)
-    return "TROLOLOLOLOLOL"
-
-def charge_meal(meal):
+@app.route("/charge/<meal_id>")
+def charge_meal(meal_id):
+    meal = mongo.db.meals.find_one_or_404({"_id": ObjectId(meal_id)})
+    if meal['hero_venmo_id'] != session['venmo_id']:
+        return "YOU AREN'T THIS MEAL's HERO, ASSHOLE."
     print "Charging meal %s" % meal['name']
     hero = mongo.db.users.find_one({"venmo_id": meal['hero_venmo_id']})
     print "Hero: %s" % hero['firstname'] 
