@@ -14,10 +14,24 @@
             </div>
           {% endif %}
           {% for entry in meal.entries %}
-            <div class="order-entry">
-              <h2>{{ entry.name }} <span class="pull-right">{{ entry.price }}</span></h2>
-            </div>
+            {% if entry.separator %}
+              <hr />
+            {% else %}
+              <div class="order-entry" data-index="{{ loop.index0 }}">
+                <h2>{{ entry.name }} <span class="pull-right">
+                  <span class="order-entry-price">${{ "%04.2f"%(entry.price + 0.0) }}</span>
+                  <span class="order-entry-quantity-widget">
+                    <button class="btn btn-default btn-xs btn-dec" onclick="decQt(this); return false"><span class="glyphicon glyphicon-minus"></button>
+                    <span class="order-entry-quantity">0</span>
+                    <button class="btn btn-default btn-xs btn-inc" onclick="incQt(this); return false"><span class="glyphicon glyphicon-plus"></button>
+                  </span>
+                </span></h2>
+              </div>
+            {% endif %}
           {% endfor %}
+          <hr />
+          <input type="submit" value="Save Order" class="btn btn-danger btn-order-submit" disabled="disabled" />
+          <h3 class="total-cost-container">Total Cost: <span class="total-cost">$0.00</span></h3>
         </div>
       </div>
       <div class="col-sm-4 col-sm-pull-8 col-xs-12">
@@ -27,10 +41,50 @@
         </div>
       </div>
     </div>
+    <input type="hidden" name="order" />
   </form>
 {% endblock %}
 
 {% block javascript %}
   $(function() {
+    window.incQt = function(button) {
+      var $qt = $(button).parent().find(".order-entry-quantity").first();
+      var qt = parseInt($qt.text());
+      $qt.text(qt + 1);
+      updateForm();
+    }
+
+    window.decQt = function(button) {
+      var $qt = $(button).parent().find(".order-entry-quantity").first();
+      var qt = parseInt($qt.text());
+      if (qt > 0) $qt.text(qt - 1);
+      updateForm();
+    }
+
+    window.updateForm = function() {
+      var total = 0;
+      var total_qt = 0;
+      var order_data = {};
+
+      $(".order-entry").each(function() {
+        var price = parseFloat($(this).find(".order-entry-price").text().replace(/[^\d.-]/g,''));
+        var qt = parseInt($(this).find(".order-entry-quantity").text());
+        var idx = parseInt($(this).data('index'));
+        total += price * qt;
+
+        if (qt > 0) {
+          order_data[idx] = qt;
+          total_qt += qt;
+        }
+      });
+
+      $(".total-cost").text("$" + total.toFixed(2));
+      $("input[name=order]").val(JSON.stringify(order_data));
+
+      if (total_qt > 0)
+       $("#order-form input[type=submit]").prop("disabled", false);
+      else
+       $("#order-form input[type=submit]").prop("disabled", "disabled");
+    }
   })
 {% endblock %}
