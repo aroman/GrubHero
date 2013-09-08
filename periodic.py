@@ -12,6 +12,7 @@ db = client['grubhero-dev']
 
 while True:
 	now = datetime.datetime.now()
+	pp(now)
 	meals = db.meals.find({"sent": False,
 		"deadline": {"$lte": now}})
 	if meals:
