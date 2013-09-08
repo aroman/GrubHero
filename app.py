@@ -201,6 +201,17 @@ def user(venmo_id):
     person = mongo.db.users.find_one_or_404({"venmo_id": venmo_id})
     return render_template('user.html', person=person, logged_in=True)
 
+@app.route("/meals/<meal_id>", methods=["GET"])
+def view_meal():    
+    meal = mongo.db.meals.find_one_or_404({'_id': ObjectId(meal_id)})
+    if meal['hero_venmo_id'] != session['venmo_id']:
+        return "You aren't this meal's hero."
+    else:
+        return render_template('order.html',
+            logged_in=True,
+            meal=meal
+        )
+
 @app.route("/meals/new", methods=["POST", "GET"])
 def new_meal():
     if not logged_in():
@@ -211,7 +222,6 @@ def new_meal():
     errors = {}
 
     # Required fields
-
     required_fields = {
         "name": "A meal name must be specified.",
         "deadline": "An ordering deadline must be specified.",
@@ -220,7 +230,6 @@ def new_meal():
     }
 
     # Parse / sanitize inputs
-
     if 'name' in request.form and request.form['name']:
         form_data['name'] = single_line(strip_tags(request.form['name']))
 
