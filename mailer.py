@@ -4,6 +4,6 @@ from jinja2.environment import Environment
 env = Environment()
 env.loader = FileSystemLoader('./email_templates')
 
-def invite_participant_template(hero, participant):
+def invite_participant_template(meal, hero, invitee):
 	template = env.get_template('invite_participant.html')
-	return template.render(hero=hero, participant=participant)
+	return template.render(meal=meal, hero=hero, invitee=invitee)
