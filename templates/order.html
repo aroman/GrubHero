@@ -28,7 +28,7 @@
                 </span></h2>
               </div>
             {% endif %}
-          {% endfor %}f
+          {% endfor %}
           <hr />
           <input type="submit" value="Save Order" class="btn btn-danger btn-order-submit" disabled="disabled" />
           <h3 class="total-cost-container">Total Cost: <span class="total-cost">$0.00</span></h3>
@@ -38,12 +38,15 @@
         <div class="mh-block">
           <h1>Participants</h1>
           {% if meal.participants %}
-            <ul class="participants-list-style">
+            <div class="list-group order-page-participant-list">
               {% for participant in meal.participants %}
-                <li><img class="participant-image" src="{{participant.picture}}"><div class="participant-text"> {{participant.firstname}} {{participant.lastname}}
-                <br><em>Ordered <div class="date-humanize">{{participant.ordered}}</div></em></div></div></li>
+                <a class="list-group-item" target="_blank" href="https://venmo.com/{{ participant.username }}">
+                  <img class="participant-image" src="{{participant.picture}}">
+                  <h4 class="list-group-item-heading">{{ participant.firstname }} {{ participant.lastname }}</h4>
+                  <p class="list-group-item-text"><em>Ordered</em></p>
+                </a>
               {% endfor %}
-            </ul>
+            </div>
           {% else %}
             <em>Nobody else has placed an order yet.</em>
           {% endif %}

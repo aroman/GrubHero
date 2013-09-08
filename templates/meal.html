@@ -25,7 +25,7 @@
           {% else %}
             <div class="order-entry" data-index="{{ loop.index0 }}">
               <h2>{{ entry.name }} <span class="pull-right">
-                <span class="order-entry-price">${{ (entry.price + 0.0) }}</span>
+                <span class="order-entry-price">${{ "%04.2f"%(entry.price + 0.0) }}</span>
               </span></h2>
             </div>
           {% endif %}

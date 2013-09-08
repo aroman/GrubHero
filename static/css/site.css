@@ -311,9 +311,30 @@ h1 .total-cost {
 img.participant-image {
   border-radius: 5px !important;
   height: 50px;
+  float: left;
+  margin-right: 10px;
 }
 
 div.participant-text {
   float: left;
   margin-left: -50px;
+}
+
+.order-page-participant-list {
+  margin-top: -5px;
+  margin-left: -10px;
+  margin-right: -10px;
+  margin-bottom: -10px;
+}
+
+.order-page-participant-list > a {
+  border-width: 0;
+  border-top-left-radius: 0 !important;
+  border-top-right-radius: 0 !important;
+  border-top-width: 1px;
+  height: 70px;
+}
+
+.order-page-participant-list > a:first-child {
+  border-top-width: 0;
 }
