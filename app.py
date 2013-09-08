@@ -171,7 +171,7 @@ def index():
 def setup():
     oauth_code = request.args.get('code')
     if oauth_code:
-        url = "https://venmo.com/oauth/access_token"
+        url = "https://api.venmo.com/oauth/access_token"
         data = {
             "client_id": VENMO_OAUTH_CLIENT_ID,
             "client_secret": VENMO_OAUTH_CLIENT_SECRET,
@@ -245,6 +245,8 @@ def view_meal(meal_id):
     meal = mongo.db.meals.find_one_or_404({'_id': ObjectId(meal_id)})
     if meal['hero_venmo_id'] != session['venmo_id']:
         return "You aren't this meal's hero."
+    elif meal['paid']:
+        return "Meal has already been paid!"
     else:
         pp(meal)
         return render_template('meal.html',
@@ -353,13 +355,14 @@ def new_meal():
         errors=errors)
 
 @app.route("/charge/<meal_id>")
-def charge_meal(meal_id):
+def charge_meal(meal_id, total):
     meal = mongo.db.meals.find_one_or_404({"_id": ObjectId(meal_id)})
     if meal['hero_venmo_id'] != session['venmo_id']:
         return "YOU AREN'T THIS MEAL's HERO, ASSHOLE."
     print "Charging meal %s" % meal['name']
     hero = mongo.db.users.find_one({"venmo_id": meal['hero_venmo_id']})
-    print "Hero: %s" % hero['firstname'] 
+    print "Hero: %s" % hero['firstname']
+    final_total = 0
     for participant in meal['participants']:
         print "Participant %s" % participant['venmo_id']
         total = 0
@@ -372,8 +375,9 @@ def charge_meal(meal_id):
             )
             print "Adding %.2f to total" % entry['price'] * order['quantity']
             total += entry['price'] * order['quantity']
+        final_total += total
         print "Total for this person: %.2f" % total
-        url = "https://venmo.com/payments"
+        url = "https://api.venmo.com/payments"
         data = {
             "access_token": hero['access_token'],
             "user_id": participant['venmo_id'],
@@ -382,23 +386,24 @@ def charge_meal(meal_id):
         }
         pp(data)
         response = requests.post(url, data)
-        pp(response)
         pp(response.json())
 
-        mongo.db.activities.insert({
-            "type": "collected payments",
-            "actor_venmo_id": session['venmo_id'],
-            "username": hero['username'],
-            "firstname": hero['firstname'],
-            "picture": hero['picture'],
-            "meal_name": meal['name'],
-            "lastname": hero['lastname'],
-            "meal_id": meal_id,
-            "when": datetime.now()
-        })
+    meal.paid = True
+    mongo.db.meals.save(meal)
+    mongo.db.activities.insert({
+        "type": "collected payments",
+        "actor_venmo_id": session['venmo_id'],
+        "username": hero['username'],
+        "firstname": hero['firstname'],
+        "picture": hero['picture'],
+        "meal_name": meal['name'],
+        "lastname": hero['lastname'],
+        "meal_id": meal_id,
+        "when": datetime.now()
+    })
 
-        flash("Charged participants for %s" % meal['name'])
-        return redirect(url_for('index'))
+    flash("Charged participants of %s for a total of %.2f" % (meal['name'], final_total))
+    return redirect(url_for('index'))
         
 @app.route("/logout")
 def logout():
@@ -446,6 +451,6 @@ def relativeTime(date):
         return '%d hours ago' % (diff.seconds / (60 * 60))
 
 app.debug = True
-# if __name__ == "__main__":
-#     app.debug = True
-#     app.run(port=int(sys.argv[1]) if len(sys.argv) > 1 else 80)
+if __name__ == "__main__":
+    app.debug = True
+    app.run(port=int(sys.argv[1]) if len(sys.argv) > 1 else 80)

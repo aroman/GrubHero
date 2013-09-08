@@ -367,7 +367,7 @@ div.participant-text {
   margin-bottom: -10px;
 }
 
-.meal-list-style > a {
+.meal-list-style > a, .meal-list-style > span {
   border-width: 0;
   border-top-left-radius: 0 !important;
   border-top-right-radius: 0 !important;
@@ -375,7 +375,11 @@ div.participant-text {
   height: 40px;
 }
 
-.meal-list-style > a:first-child {
+.meal-list-style > span {
+  opacity: 0.6;
+}
+
+.meal-list-style > a:first-child, .meal-list-style > span:first-child {
   border-top-width: 0;
 }
 
