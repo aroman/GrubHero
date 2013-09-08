@@ -5,6 +5,7 @@ import datetime
 from flask import Flask, request, render_template, session, redirect, url_for, flash
 from flask.ext.pymongo import PyMongo
 from flask.ext.mail import Mail, Message
+from bson.objectid import ObjectId
 import sys
 from HTMLParser import HTMLParser
 from datetime import datetime
@@ -59,62 +60,7 @@ def order(meal_id):
         session['return_url'] = request.url
         return redirect(VENMO_OAUTH_URL)
 
-    #TODO - Check here if user's session's email is in the list of meal invitees
-
-    #TODO - Use actual meal data, not dummy data
-    meal = {
-        "name": "Chinese Night",
-        "description": "Because finals are tomorrow.\n\nYay!",
-        "hero_venmo_id": "123456",
-        "deadline": {
-            "$date": "2013-09-08T18:00:00.000Z"
-        },
-        "paid": "false",
-        "entries": [
-            {
-                "name": "General Tso's Chicken",
-                "price": 9.50
-            },
-            {
-                "name": "Chicken w/ Broccoli",
-                "price": 7.00
-            },
-            {
-                "name": "Bento Box",
-                "price": 10.75
-            },
-            {
-                "name": "White Rice",
-                "price": 5.00
-            },
-            {
-                "separator": "true",
-            },
-            {
-                "name": "Springroll",
-                "price": 1.50
-            },
-            {
-                "name": "Brown rice",
-                "price": 5.00
-            }
-        ],
-        "participants": [
-            {
-                "venmo_id": "123456",
-                "orders": [
-                    {
-                        "entry_index": 2,
-                        "quantity": 1
-                    },
-                    {
-                        "entry_index": 4,
-                        "quantity": 2
-                    }
-                ]
-            }
-        ]
-    }
+    meal = mongo.db.meals.find_one_or_404({'_id': ObjectId(meal_id)})
 
     form_data = {}
     errors = {}
