@@ -89,7 +89,7 @@ def order(meal_id):
             "lastname": participant['lastname'],
             "picture": participant['picture'],
             "username": participant['username'],
-            "ordered": datetime.now(),
+            "ordered": datetime.utcnow(),
             "orders": orders
         }
         meal['participants'].append(to_append)
@@ -102,7 +102,7 @@ def order(meal_id):
             "lastname": participant['lastname'],
             "meal_id": meal_id,
             "meal_name": meal['name'],
-            "when": datetime.now()
+            "when": datetime.utcnow()
         })
 
         pp(meal)
@@ -200,7 +200,7 @@ def setup():
             user_from_db['username'] = user['username']
             user_from_db['email'] = user['email']
             user_from_db['picture'] = user['picture']
-            user_from_db['last_visit'] = datetime.now()
+            user_from_db['last_visit'] = datetime.utcnow()
             mongo.db.users.save(user_from_db)
         else:
             print "User has NOT used GrubHero before. Making account in DB."
@@ -212,7 +212,7 @@ def setup():
                 "username": user['username'],
                 "email": user['email'],
                 "picture": user['picture'],
-                "last_visit": datetime.now()
+                "last_visit": datetime.utcnow()
             })
             mongo.db.activities.insert({
                 "type": "joined",
@@ -221,7 +221,7 @@ def setup():
                 "picture": user['picture'],
                 "lastname": user['lastname'],
                 "actor_venmo_id": user['id'],
-                "when": datetime.now()
+                "when": datetime.utcnow()
             })
 
         session['venmo_id'] = user['id']
@@ -318,7 +318,7 @@ def new_meal():
                 "deadline": form_data['deadline'],
                 "invited": form_data['users'],
                 "participants": [],
-                "created": datetime.now(),
+                "created": datetime.utcnow(),
                 "entries": entries,
                 "sent": False,
                 "paid": False 
@@ -335,7 +335,7 @@ def new_meal():
                 "picture": sender['picture'],
                 "actor_venmo_id": session['venmo_id'],
                 "meal_name": form_data['name'],
-                "when": datetime.now()
+                "when": datetime.utcnow()
             })
 
             for invitee in meal['invited']:
@@ -399,7 +399,7 @@ def charge_meal(meal_id, total):
         "meal_name": meal['name'],
         "lastname": hero['lastname'],
         "meal_id": meal_id,
-        "when": datetime.now()
+        "when": datetime.utcnow()
     })
 
     flash("Charged participants of %s for a total of %.2f" % (meal['name'], final_total))
@@ -428,8 +428,7 @@ def total_for_meal():
     return dict(total_for_meal=func)
 
 def relativeTime(date):
-    date = date.replace(tzinfo=None)
-    diff = datetime.now() - date
+    diff = datetime.utcnow() - date
 
     if diff.days > 7 or diff.days < 0:
         return date.ctime()

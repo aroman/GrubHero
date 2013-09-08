@@ -11,7 +11,7 @@ client = MongoClient('mongodb://thehero:thepassword@ds043338.mongolab.com:43338/
 db = client['grubhero-dev']
 
 while True:
-	now = datetime.datetime.now()
+	now = datetime.datetime.utcnow()
 	pp(now)
 	meals = db.meals.find({"sent": False,
 		"deadline": {"$lte": now}})
