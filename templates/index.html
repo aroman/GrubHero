@@ -17,11 +17,11 @@
           <a href="/meals/new" class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-plus-sign"></span> New Meal</a>
         </span></h1>
         {% if meals %}
-          <ul class="meal-list-style">
+          <div class="meal-list-style list-group">
             {% for meal in meals %}
-              <li><a href="/order/{{meal._id}}">{{meal.name}} ({{meal.participants|length}}/{{meal.invited|length}})</a></li>
+              <a class="list-group-item" href="/meal/{{meal._id}}" title="{{meal.participants|length}} out of {{meal.invited|length}} invitees have ordered."><span class="badge">{{meal.participants|length}}/{{meal.invited|length}}</span> {{meal.name}}</a>
             {% endfor %}
-          </ul>
+          </div>
         {% else %}
           <em>No meals created.</em>
         {% endif %}
@@ -29,11 +29,14 @@
       <div class="mh-block">
         <h1>My Orders</h1>
         {% if orders %}
-          <ul class="order-list-style">
+          <div class="order-list-style list-group">
             {% for order in orders %}
-              <li class="{% if order.paid %}order-paid{% endif %}">{{order.name}} - {{order.tease}}</li>
+              <div class="list-group-item {% if order.paid %}paid{% endif %}">
+                <h4 class="list-group-item-heading">{{order.name}}</h4>
+                <p class="list-group-item-text">{{order.tease}}{% if order.paid %}<span class="glyphicon glyphicon-credit-card" style="margin-left: 8px; color: green;"></span>{% endif %}</p>
+              </div>
             {% endfor %}
-          </ul>
+          </div>
         {% else %}
           <em>You have no current meal orders.</em>
         {% endif %}

@@ -358,3 +358,47 @@ div.participant-text {
 .activity-feed-list > div:first-child {
   border-top-width: 0;
 }
+
+.meal-list-style {
+  text-align: left;
+  margin-top: -5px;
+  margin-left: -10px;
+  margin-right: -10px;
+  margin-bottom: -10px;
+}
+
+.meal-list-style > a {
+  border-width: 0;
+  border-top-left-radius: 0 !important;
+  border-top-right-radius: 0 !important;
+  border-top-width: 1px;
+  height: 40px;
+}
+
+.meal-list-style > a:first-child {
+  border-top-width: 0;
+}
+
+.order-list-style {
+  text-align: left;
+  margin-top: -5px;
+  margin-left: -10px;
+  margin-right: -10px;
+  margin-bottom: -10px;
+}
+
+.order-list-style > div {
+  border-width: 0;
+  border-top-left-radius: 0 !important;
+  border-top-right-radius: 0 !important;
+  border-top-width: 1px;
+  height: 60px;
+}
+
+.order-list-style > div:first-child {
+  border-top-width: 0;
+}
+
+.order-list-style > div.paid {
+  opacity: 0.5;
+}
