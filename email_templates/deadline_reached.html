@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+	Howdy {{hero.firstname}},
+	<br>
+	<br>
+	The deadline for ordering {{meal.name}} has expired!
+	<br>
+	<h4>
+	<a href="http://grubhero.com/meal/{{meal._id}}"> Click here</a> to view
+	the orders.
+	 </h3>
+ 	<br>
+	Love,
+	<br>
+	GrubHero
+{% endblock %}
