@@ -18,6 +18,8 @@
         <div class="mh-block">
           <h1>Invited Users</h1>
           {% if errors.users %}<div class="label label-danger">{{ errors.users }}</div>{% endif %}
+          <p>Enter email addresses of users you're inviting.</p>
+          <div id="user-container"></div>
         </div>
       </div>
       <div class="col-sm-8 col-xs-12">
@@ -66,12 +68,23 @@
       </tr>
     </table>
   </script>
+
+  <script type="text/template" id="user-template">
+    <table class="user-row" style="display: none;">
+      <tr>
+        <td class="user-remove-cell"><a onclick="removeUserRow(this); return false;" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-remove"></span></a></td>
+        <td class="user-email-cell"><input type="text" onkeydown="addUserMaybe(this)" onchange="updateUserData()" class="form-control user-email" placeholder="Email Address" /></td>
+      </tr>
+    </table>
+  </script>
 {% endblock %}
 
 {% block javascript %}
   $(function() {
     var $entryContainer = $("#menu-entry-container");
+    var $userContainer = $("#user-container");
     var $entryTemplate = $("#entry-template");
+    var $userTemplate = $("#user-template");
     var $dividerTemplate = $("#divider-template");
 
     window.addEntry = function() {
@@ -89,6 +102,25 @@
       updateMenuData();
     }
 
+    window.removeUserRow = function(button) {
+      if ($(button).parent().parent().parent().parent().is(":only-child"))
+        return;
+
+      $(button).parent().parent().parent().parent().remove();
+      updateUserData();
+    }
+
+    window.updateUserData = function() {
+      var user_data = []
+
+      $userContainer.find(".user-email").each(function() {
+        var val = $(this).val();
+        if (val.length > 0) user_data.push(val);
+      });
+
+      $("input[name=users]").val(JSON.stringify(user_data));
+    }
+
     window.updateMenuData = function() {
       $(".entry-price").each(function() {
         var val = parseFloat($(this).val().replace(/[^\d.-]/g,''));
@@ -103,8 +135,9 @@
       var count = 0;
       $entryContainer.find(">*").each(function() {
         if ($(this).hasClass("entry-row")) {
-          var price = parseFloat($(this).find(".entry-price").val());
+          var price = $(this).find(".entry-price").val();
           if (price) price = price.replace(/[^\d.-]/g,'');
+          if (price) price = parseFloat(price);
           menu_data.push({
             "type": "entry",
             "name": $(this).find(".entry-name").val(),
@@ -122,18 +155,26 @@
       $("input[name=menu]").val(JSON.stringify(menu_data));
     }
 
-    function formatPrice() {
-      var s = number.toString();
+    window.addUserMaybe = function(input) {
+      if ($(input).parent().parent().parent().parent().is(":last-child"))
+        addUser(true);
+    }
 
+    window.addUser = function(animate) {
+      $userContainer.append($userTemplate.html());
+      if (animate)
+        $userContainer.children().last().fadeIn();
+      else
+        $userContainer.children().last().show();
+      updateUserData();
     }
 
     for (var i = 0; i < 3; i++) addEntry();
+    addUser(false);
 
     $entryContainer.sortable({
-      //placeholder: "rubric-constructor-placeholder cat-placeholder",
       forcePlaceholderSize: true,
       handle: ".btn-move",
-      //items: "div[data-category-virtual=false]",
       stop: function(event, ui) {
         updateMenuData();
       }
