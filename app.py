@@ -283,7 +283,7 @@ def new_meal():
             meal = {
                 "hero_venmo_id": session['venmo_id'],
                 "name": form_data['name'],
-                "description": form_data['description'],
+                "description": form_data['description'] if 'description' in form_data else None,
                 "deadline": form_data['deadline'],
                 "invited": form_data['users'],
                 "participants": [],
