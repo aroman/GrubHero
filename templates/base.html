@@ -18,7 +18,7 @@
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
             {% if logged_in %}
-              <li><a href="/user/{{ session.venmo_id }}"><img class="nav-avatar" src="{{ session.photo_url }}" /> {{ session.firstname }} {{ session.lastname }}</a></li>
+              <li><a href="https://venmo.com/{{ session.username }}"><img class="nav-avatar" src="{{ session.photo_url }}" /> {{ session.firstname }} {{ session.lastname }}</a></li>
               <li><a href="/logout">Sign Out</a></li>
             {% else %}
               <li><a href="{{ VENMO_OAUTH_URL }}">Sign In with <img class="venmo-logo" src="{{ url_for('static', filename='images/venmo.png') }}" /></a></li>
