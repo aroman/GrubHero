@@ -159,3 +159,15 @@ img.nav-avatar {
 .user-row:only-child .user-remove-cell {
   display: none;
 }
+
+.meal-description {
+  border-radius: 4px;
+  background: #f4f4f4;
+  border: solid 1px #e8e8e8;
+  padding: 10px;
+  margin: 10px auto;
+}
+
+.order-entry h2 {
+  font-size: 18px;
+}
