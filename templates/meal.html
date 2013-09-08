@@ -15,7 +15,11 @@
         <hr class="thin" />
         <strong>Deadline:</strong> {{ meal.deadline.ctime() }}
         <hr class="thin" />
-        <a href="/charge/{{ meal._id }}" class="form-control btn btn-danger"><span class="glyphicon glyphicon-credit-card"></span> Collect Payments &raquo;</a>
+        {% if meal.paid %}
+          This meal has been paid for.
+        {% else %}
+          <a href="/charge/{{ meal._id }}" class="form-control btn btn-danger"><span class="glyphicon glyphicon-credit-card"></span> Collect Payments &raquo;</a>
+        {% endif %}
       </div>
       <div class="mh-block">
         <h1>Menu Options</h1>

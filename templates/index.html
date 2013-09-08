@@ -19,11 +19,7 @@
         {% if meals %}
           <div class="meal-list-style list-group">
             {% for meal in meals %}
-              {% if meal.paid %}
-                <span class="list-group-item" title="{{meal.participants|length}} out of {{meal.invited|length}} invitees have ordered."><span class="badge">{{meal.participants|length}}/{{meal.invited|length}}</span> {{meal.name}}</span>
-              {% else %}
-                <a class="list-group-item" href="/meal/{{meal._id}}" title="{{meal.participants|length}} out of {{meal.invited|length}} invitees have ordered."><span class="badge">{{meal.participants|length}}/{{meal.invited|length}}</span> {{meal.name}}</a>
-              {% endif %}
+              <a class="list-group-item" href="/meal/{{meal._id}}" title="{{meal.participants|length}} out of {{meal.invited|length}} invitees have ordered."><span class="badge">{{meal.participants|length}}/{{meal.invited|length}}</span> {{meal.name}}</a>
             {% endfor %}
           </div>
         {% else %}
