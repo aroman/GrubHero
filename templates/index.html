@@ -43,7 +43,27 @@
       <div class="mh-block">
         <h1>Activity Feed</h1>
         <center>
-          <i>Coming soon!</i>
+          {% if activities %}
+            <ul class="activity-list-style">
+              {% for activity in activities %}
+                {% if activity.type == 'joined' %}
+                  <li><a href="http:/venmo.com/{{activity.username}}">{{activity.firstname}} {{activity.lastname}}</a> joined GrubHero. &mdash; {{activity.when}}</li>
+                {% elif activity.type == 'ordered' %}
+                  <li><a href="http:/venmo.com/{{activity.username}}">{{activity.firstname}} {{activity.lastname}}</a> ordered {{meal_name}}. &mdash; {{activity.when}}</li>
+                {% elif activity.type == 'created meal' %}
+                  <li><a href="http:/venmo.com/{{activity.username}}">{{activity.firstname}} {{activity.lastname}}</a> created the meal {{meal_name}}. &mdash; {{activity.when}}</li>
+                {% elif activity.type == 'collected payments' %}
+                  <li><a href="http:/venmo.com/{{activity.username}}">{{activity.firstname}} {{activity.lastname}}</a> collected payments for {{meal_name}}. &mdash; {{activity.when}}</li>
+                {% else %}
+                  <li>{{activity}}</li>
+                {% endif %}
+              {% endfor %}
+            </ul>
+          {% else %}
+            <br>
+            <em>No activities logged yet.</em>
+            <br>
+          {% endif %}
         </center>
       </div>
     </div>
