@@ -172,6 +172,10 @@ img.nav-avatar {
   font-size: 18px;
 }
 
+.navbar-brand {
+  padding:14px 15px 12px
+}
+
 .site-flash {
   font-weight: bold;
   font-size: 16px;
