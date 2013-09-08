@@ -88,6 +88,8 @@ def order(meal_id):
             "firstname": participant['firstname'],
             "lastname": participant['lastname'],
             "picture": participant['picture'],
+            "username": participant['username'],
+            "ordered": datetime.datetime.now(),
             "orders": orders
         }
         meal['participants'].append(to_append)
@@ -97,7 +99,12 @@ def order(meal_id):
         return redirect(url_for('index'))
 
     return render_template('order.html',
-        logged_in=True, meal=meal, errors=errors, form_data=form_data)
+        logged_in=True,
+        meal=meal,
+        errors=errors,
+        form_data=form_data,
+        pretty_date=pretty_date
+    )
 
 @app.route("/")
 def index():
@@ -171,9 +178,10 @@ def setup():
             user_from_db['access_token'] = access_token
             user_from_db['firstname'] = user['firstname']
             user_from_db['lastname'] = user['lastname']
+            user_from_db['username'] = user['username']
             user_from_db['email'] = user['email']
             user_from_db['picture'] = user['picture']
-            user_from_db['last_visit'] = datetime.utcnow()
+            user_from_db['last_visit'] = datetime.datetime.now()
             mongo.db.users.save(user_from_db)
         else:
             print "User has NOT used GrubHero before. Making account in DB."
@@ -182,6 +190,7 @@ def setup():
                 "access_token": access_token,
                 "firstname": user['firstname'],
                 "lastname": user['lastname'],
+                "username": user['username'],
                 "email": user['email'],
                 "picture": user['picture'],
                 "last_visit": datetime.utcnow()
@@ -288,6 +297,7 @@ def new_meal():
                 "deadline": form_data['deadline'],
                 "invited": form_data['users'],
                 "participants": [],
+                "created": datetime.datetime.now(),
                 "entries": entries,
                 "sent": False,
                 "paid": False 
