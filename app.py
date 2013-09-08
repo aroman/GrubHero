@@ -93,6 +93,18 @@ def order(meal_id):
             "orders": orders
         }
         meal['participants'].append(to_append)
+
+        mongo.db.activities.insert({
+            "type": "ordered",
+            "actor_venmo_id": user['id'],
+            "username": participant['username'],
+            "firstname": participant['firstname'],
+            "lastname": participant['lastname'],
+            "meal_id": meal_id,
+            "meal_name": meal['name'],
+            "when": datetime.now()
+        })
+
         pp(meal)
         mongo.db.meals.save(meal)
         flash("Your order for %s has been recorded!" % meal['name'])
@@ -118,6 +130,9 @@ def index():
             {"$elemMatch": {"venmo_id": session['venmo_id']}}
         })
 
+        # For activity stream
+        activities = mongo.db.activities.find().limit(10)
+
         orders = []
         for meal_with_order in meals_with_orders:
             me = None
@@ -141,6 +156,7 @@ def index():
             logged_in=True,
             meals=my_meals,
             orders=orders,
+            activities=list(activities),
             VENMO_CLIENT_ID=VENMO_OAUTH_CLIENT_ID,
             VENMO_OAUTH_URL=VENMO_OAUTH_URL)
     else:
@@ -192,7 +208,15 @@ def setup():
                 "username": user['username'],
                 "email": user['email'],
                 "picture": user['picture'],
-                "last_visit": datetime.utcnow()
+                "last_visit": datetime.now()
+            })
+            mongo.db.activities.insert({
+                "type": "joined",
+                "username": user['username'],
+                "firstname": user['firstname'],
+                "lastname": user['lastname'],
+                "actor_venmo_id": user['id'],
+                "when": datetime.now()
             })
 
         session['venmo_id'] = user['id']
@@ -292,9 +316,20 @@ def new_meal():
                 "sent": False,
                 "paid": False 
             }
-            mongo.db.meals.insert(meal)
+            meal_from_db = mongo.db.meals.insert(meal)
 
             sender = mongo.db.users.find_one({"venmo_id": session['venmo_id']})
+
+            mongo.db.activities.insert({
+                "type": "created meal",
+                "username": sender['username'],
+                "firstname": sender['firstname'],
+                "lastname": sender['lastname'],
+                "actor_venmo_id": session['id'],
+                "meal_id": meal_from_db._id,
+                "meal_name": form_data['name'],
+                "when": datetime.now()
+            })
 
             for invitee in meal['invited']:
                 msg = Message("%s wants to order %s with you!" % (sender['firstname'], meal['name']),
@@ -343,6 +378,17 @@ def charge_meal(meal_id):
         pp(data)
         response = requests.post(url, data)
         pp(response.json())
+
+        mongo.db.activities.insert({
+            "type": "collected payments",
+            "actor_venmo_id": session['venmo_id'],
+            "username": hero['username'],
+            "firstname": hero['firstname'],
+            "meal_name": meal['name'],
+            "lastname": hero['lastname'],
+            "meal_id": meal_id,
+            "when": datetime.now()
+        })
         
 @app.route("/logout")
 def logout():
