@@ -349,6 +349,23 @@ def logout():
     session.pop('venmo_id', None)
     return redirect(url_for('index'))
 
+@app.context_processor
+def total_for_participant_and_meal():
+    def func(user, meal):
+        return sum(map(lambda i: i['quantity'] * meal['entries'][i['entry_index']]['price'], user['orders']))
+    return dict(total_for_participant_and_meal=func)
+
+@app.context_processor
+def total_for_meal():
+    p_and_m_func = total_for_participant_and_meal()
+    def func(meal):
+        parts = meal['participants']
+        total = 0
+        for p in parts:
+            total += sum(map(lambda i: i['quantity'] * meal['entries'][i['entry_index']]['price'], p['orders']))
+        return total
+    return dict(total_for_meal=func)
+
 if __name__ == "__main__":
     app.debug = True
     app.run(port=int(sys.argv[1]) if len(sys.argv) > 1 else 80)

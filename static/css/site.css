@@ -54,6 +54,12 @@ img.venmo-logo-medium {
   border-top-right-radius: 4px;
 }
 
+.mh-block h1.just-header {
+  border-bottom: none;
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+
 h1 > .pull-right {
   position: relative;
   bottom: 3px;
@@ -216,4 +222,65 @@ img.nav-avatar {
   float: right;
   position: relative;
   bottom: 5px;
+}
+
+hr.thin {
+  margin: 5px auto;
+}
+
+.meal-order-name {
+  font-size: 18px;
+  margin-left: 10px;
+}
+
+.avatar-small {
+  height: 30px;
+  width: 30px;
+  border-radius: 4px;
+  margin-right: 6px;
+}
+
+.meal-order-row {
+  padding-bottom: 10px;
+  margin-left: -10px;
+  margin-right: -10px;
+  padding-top: 2px;
+  border-bottom: solid 1px #aaa;
+}
+
+.meal-order-row:last-child {
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.order-table {
+  margin-top: 10px;
+  margin-bottom: -10px;
+  margin-right: -10px;
+  width: 100%;
+}
+
+.ordered-entry-name-cell {
+  width: auto;
+}
+
+.ordered-entry-quantity-cell {
+  width: 60px;
+}
+
+.ordered-entry-price-cell {
+  width: 60px;
+}
+
+h1 .total-cost {
+  float: right;
+  position: relative;
+  bottom: 1px;
+  left: 4px;
+  font-size: 16px;
+  border-radius: 4px;
+  background: #f3f3f3;
+  padding: 6px;
+  -webkit-box-shadow: inset 1px 1px 1px 0.1px rgba(0, 0, 0, 0.1);
+  box-shadow: inset 1px 1px 1px 0.1px rgba(0, 0, 0, 0.1);
 }

@@ -1,1 +1,76 @@
-{{meal}}
+{% extends "base.html" %}
+
+{% block title %}{{ meal.name }}{% endblock %}
+
+{% block content %}
+  <div class="row">
+    <div class="col-sm-5 col-xs-12">
+      <div class="mh-block">
+        <h1>{{ meal.name }}</h1>
+        {% if meal.description %}
+          {{ meal.description.replace("\r\n", "\n").replace("\n", "<br />") | safe }}
+          <hr class="thin" />
+        {% endif %}
+        {{ meal.participants | length }} out of {{ meal.invited | length }} invitees placed an order.
+        <hr class="thin" />
+        <strong>Deadline:</strong> {{ meal.deadline.ctime() }}
+        <hr class="thin" />
+        <a href="/charge/{{ meal._id }}" class="form-control btn btn-danger"><span class="glyphicon glyphicon-credit-card"></span> Collect Payments &raquo;</a>
+      </div>
+      <div class="mh-block">
+        <h1>Menu Options</h1>
+        {% for entry in meal.entries %}
+          {% if entry.separator %}
+            <hr />
+          {% else %}
+            <div class="order-entry" data-index="{{ loop.index0 }}">
+              <h2>{{ entry.name }} <span class="pull-right">
+                <span class="order-entry-price">${{ (entry.price + 0.0) }}</span>
+              </span></h2>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+    <div class="col-sm-7 col-xs-12">
+      <div class="mh-block">
+        <h1 class="just-header">Orders
+          <span class="total-cost">Total Cost: ${{ total_for_meal(meal) }}</span></h1>
+      </div>
+        {% for user in meal.participants %}
+          <div class="mh-block">
+            <div class="meal-order-row">
+              <div class="meal-order-name"><a href="https://venmo.com/{{ user.username }}">
+                <img src="{{ user.picture }}" class="avatar-small" /></a>
+                <a href="https://venmo.com/{{ user.username }}">{{ user.firstname }} {{ user.lastname }}</a>
+              </div>
+              <table class="table order-table">
+                <tr>
+                  <th class="ordered-entry-name-cell">Item</th>
+                  <th class="ordered-entry-quantity-cell">Quantity</th>
+                  <th class="ordered-entry-price-cell">Subtotal</th>
+                </tr>
+                {% for item in user.orders %}
+                  <tr>
+                    <td class="ordered-entry-name-cell">{{ meal.entries[item.entry_index].name }}</td>
+                    <td class="ordered-entry-quantity-cell">{{ item.quantity }}</td>
+                    <td class="ordered-entry-price-cell">${{ "%04.2f"%((item.quantity * meal.entries[item.entry_index].price) + 0.0) }}</td>
+                  </tr>
+                {% endfor %}
+                <tr class="active">
+                  <td colspan="2">Total For User</td>
+                  <th>${{ "%04.2f"%total_for_participant_and_meal(user, meal) }}</th>
+                </tr>
+              </table>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block javascript %}
+  $(function() {
+  })
+{% endblock %}
