@@ -32,8 +32,8 @@
           <div class="order-list-style list-group">
             {% for order in orders %}
               <div class="list-group-item {% if order.paid %}paid{% endif %}">
-                <h4 class="list-group-item-heading">{{order.name}}</h4>
-                <p class="list-group-item-text">{{order.tease}}{% if order.paid %}<span class="glyphicon glyphicon-credit-card" style="margin-left: 8px; color: green;"></span>{% endif %}</p>
+                <h4 class="list-group-item-heading">{{order.name}}{% if order.paid %}<span class="glyphicon glyphicon-credit-card pull-right" style="margin-left: 8px; color: green;"></span>{% endif %}</h4>
+                <p class="list-group-item-text">{{order.tease}}</p>
               </div>
             {% endfor %}
           </div>
