@@ -89,7 +89,7 @@ def order(meal_id):
             "lastname": participant['lastname'],
             "picture": participant['picture'],
             "username": participant['username'],
-            "ordered": datetime.datetime.now(),
+            "ordered": datetime.now(),
             "orders": orders
         }
         meal['participants'].append(to_append)
@@ -180,7 +180,7 @@ def setup():
             user_from_db['username'] = user['username']
             user_from_db['email'] = user['email']
             user_from_db['picture'] = user['picture']
-            user_from_db['last_visit'] = datetime.datetime.now()
+            user_from_db['last_visit'] = datetime.now()
             mongo.db.users.save(user_from_db)
         else:
             print "User has NOT used GrubHero before. Making account in DB."
@@ -210,15 +210,6 @@ def setup():
             return redirect(url_for('index'))
     else:
         return "Error"
-
-@app.route("/user/<venmo_id>")
-def user(venmo_id):
-    if not logged_in():
-        session['return_url'] = request.url
-        return redirect(VENMO_OAUTH_URL)
-
-    person = mongo.db.users.find_one_or_404({"venmo_id": venmo_id})
-    return render_template('user.html', person=person, logged_in=True)
 
 @app.route("/meal/<meal_id>", methods=["GET"])
 def view_meal(meal_id):
@@ -296,7 +287,7 @@ def new_meal():
                 "deadline": form_data['deadline'],
                 "invited": form_data['users'],
                 "participants": [],
-                "created": datetime.datetime.now(),
+                "created": datetime.now(),
                 "entries": entries,
                 "sent": False,
                 "paid": False 
