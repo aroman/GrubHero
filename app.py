@@ -98,6 +98,7 @@ def order(meal_id):
             "type": "ordered",
             "actor_venmo_id": user['id'],
             "username": participant['username'],
+            "picture": participant['picture'],
             "firstname": participant['firstname'],
             "lastname": participant['lastname'],
             "meal_id": meal_id,
@@ -218,6 +219,7 @@ def setup():
                 "type": "joined",
                 "username": user['username'],
                 "firstname": user['firstname'],
+                "picture": user['picture'],
                 "lastname": user['lastname'],
                 "actor_venmo_id": user['id'],
                 "when": datetime.now()
@@ -320,7 +322,7 @@ def new_meal():
                 "sent": False,
                 "paid": False 
             }
-            meal_from_db = mongo.db.meals.insert(meal)
+            mongo.db.meals.insert(meal)
 
             sender = mongo.db.users.find_one({"venmo_id": session['venmo_id']})
 
@@ -329,8 +331,8 @@ def new_meal():
                 "username": sender['username'],
                 "firstname": sender['firstname'],
                 "lastname": sender['lastname'],
-                "actor_venmo_id": session['id'],
-                "meal_id": meal_from_db._id,
+                "picture": sender['picture'],
+                "actor_venmo_id": session['venmo_id'],
                 "meal_name": form_data['name'],
                 "when": datetime.now()
             })
@@ -388,6 +390,7 @@ def charge_meal(meal_id):
             "actor_venmo_id": session['venmo_id'],
             "username": hero['username'],
             "firstname": hero['firstname'],
+            "picture": hero['picture'],
             "meal_name": meal['name'],
             "lastname": hero['lastname'],
             "meal_id": meal_id,
