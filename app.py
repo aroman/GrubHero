@@ -167,6 +167,10 @@ def index():
         return render_template('index_logged_out.html',
             VENMO_OAUTH_URL=VENMO_OAUTH_URL)
 
+@app.route("/video")
+def video():
+    return redirect("http://vimeo.com/lol")
+
 @app.route("/setup")
 def setup():
     oauth_code = request.args.get('code')
