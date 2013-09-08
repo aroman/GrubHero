@@ -207,7 +207,7 @@ def view_meal():
     if meal['hero_venmo_id'] != session['venmo_id']:
         return "You aren't this meal's hero."
     else:
-        return render_template('order.html',
+        return render_template('meal.html',
             logged_in=True,
             meal=meal
         )
@@ -277,6 +277,7 @@ def new_meal():
                 "invited": form_data['users'],
                 "participants": [],
                 "entries": entries,
+                "sent": False,
                 "paid": False 
             }
             mongo.db.meals.insert(meal)
