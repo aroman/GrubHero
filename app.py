@@ -53,11 +53,12 @@ def single_line(text):
     """Removes redundant whitespace, and strips leading/trailing whitespace."""
     return " ".join(text.strip().split())
 
-@app.route("/order/<int:meal_id>")
+@app.route("/order/<meal_id>")
 def order(meal_id):
     if not logged_in():
         session['return_url'] = request.url
         return redirect(VENMO_OAUTH_URL)
+
     #TODO - Check here if user's session's email is in the list of meal invitees
 
     #TODO - Use actual meal data, not dummy data
@@ -172,33 +173,16 @@ def index():
         return render_template('index_logged_out.html',
             VENMO_OAUTH_URL=VENMO_OAUTH_URL)
 
-
 @app.route("/send_email_to/<target_venmo_id>")
-def send_email_to(target_venmo_id):
+def send(recipients):
     sender = mongo.db.users.find_one({"venmo_id": session['venmo_id']})
     target = mongo.db.users.find_one({"venmo_id": target_venmo_id})
     msg = Message("%s wants to be your Grub Hero!" % sender['firstname'],
         sender=("GrubHero", "liazon@grubhero.com"),
-        recipients=[target['email']])
+        recipients=recipients)
     msg.html = mailer.invite_participant_template(sender, target)
     mail.send(msg)
     return "Email sent :)"
-
-@app.route("/create_meal/<name>")
-def create_meal(name):
-    if not logged_in():
-        session['return_url'] = request.url
-        return redirect(VENMO_OAUTH_URL)
-
-    meal = {
-        "hero_venmo_id": session['venmo_id'],
-        "name": name,
-        "description": "Because finals are tomorrow",
-        "deadline": datetime(2013, 9, 8, 18),
-        "paid": False
-    }
-    mongo.db.meals.insert(meal)
-    return 'Meal with name %s created. <a href="/">Go home</a>' % name
 
 @app.route("/setup")
 def setup():
@@ -340,6 +324,16 @@ def new_meal():
                 "paid": False 
             }
             mongo.db.meals.insert(meal)
+
+            sender = mongo.db.users.find_one({"venmo_id": session['venmo_id']})
+
+            for invitee in meal['invited']:
+                msg = Message("%s wants to order %s with you!" % (sender['firstname'], meal['name']),
+                    sender=("GrubHero", "liazon@grubhero.com"),
+                    recipients=[invitee])
+                msg.html = mailer.invite_participant_template(meal, sender, invitee)
+                mail.send(msg)
+
             flash("Meal %s created successfully!" % meal['name'])
             return redirect(url_for('index'))
 

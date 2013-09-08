@@ -1,15 +1,19 @@
 {% extends "base.html" %}
 
 {% block content %}
-	<p>
-		<h3>Hey there {{participant.firstname}}!</h3>
-
-		{{hero.firstname}} {{hero.lastname}} wants to order {{name}} with you!
-
-		<a href="{{order_url}}"> Click here</a> to let {{hero.firstname}}
-		 know what you want to eat.
-
-		You have until {{deadline}} to do so -- that's when {{hero.firstname}}
-		 will place the order!
-	</p>
+	Howdy,
+	<br>
+	<br>
+	{{hero.firstname}} {{hero.lastname}} wants to order {{meal.name}} with you.
+	<br>
+	<h4>
+	<a href="http://grubhero.com/order/{{meal._id}}"> Click here</a> to give {{hero.firstname}}
+	your order.
+	 </h3>
+	You have until <em>{{meal.deadline.strftime("%B %d at %I:%M %p")}}</em> to do
+	 so &mdash; that's when {{hero.firstname}} will place the order!
+ 	<br><br>
+	Love,
+	<br>
+	GrubHero
 {% endblock %}
