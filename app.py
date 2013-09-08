@@ -283,7 +283,8 @@ def new_meal():
 
     if 'deadline' in request.form and request.form['deadline']:
         print "Begin"
-        pp(form_data['deadline'])
+        pp(request.form['deadline'])
+        
         form_data['deadline'] = datetime.strptime(
             request.form['deadline'], JQUERY_TIME_FORMAT)
         pp(form_data['deadline'])
