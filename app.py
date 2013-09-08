@@ -132,7 +132,7 @@ def index():
         })
 
         # For activity stream
-        activities = list(mongo.db.activities.find().limit(10))
+        activities = list(mongo.db.activities.find().limit(10))[::-1]
 
         for a in activities:
             a['when_fuzzy'] = relativeTime(a['when'])
