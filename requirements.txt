@@ -1,0 +1,8 @@
+Flask==0.10.1
+Jinja2==2.7.1
+Werkzeug==0.9.4
+gunicorn==18.0
+Flask-Mail==0.9.0
+bson==0.3.3
+pymongo==2.6.2
+Flask-PyMongo==0.3.0
