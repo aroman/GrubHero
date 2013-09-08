@@ -8,6 +8,7 @@ from flask.ext.mail import Mail, Message
 import sys
 from HTMLParser import HTMLParser
 from datetime import datetime
+import json
 
 import mailer
 
@@ -225,6 +226,19 @@ def new_meal():
         form_data['deadline'] = datetime.strptime(
             request.form['deadline'], JQUERY_TIME_FORMAT)
         form_data['deadline'].strftime("%Y")
+
+    if 'users' in request.form and request.form['users']:
+        form_data['users'] = json.loads(request.form['users'])
+
+    if 'menu' in request.form and request.form['menu']:
+        form_data['menu'] = json.loads(request.form['menu'])
+        remove_items = []
+        for item in form_data['menu']:
+            if item['type'] == "entry" and (
+                    not item["name"] or not item["price"]):
+                remove_items.append(item)
+        for item in remove_items:
+            form_data['menu'].remove(item)
 
     # Error messages for missing required fields
 
