@@ -102,8 +102,7 @@ def order(meal_id):
         logged_in=True,
         meal=meal,
         errors=errors,
-        form_data=form_data,
-        pretty_date=pretty_date
+        form_data=form_datas
     )
 
 @app.route("/")
