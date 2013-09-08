@@ -171,3 +171,10 @@ img.nav-avatar {
 .order-entry h2 {
   font-size: 18px;
 }
+
+.site-flash {
+  font-weight: bold;
+  font-size: 16px;
+  padding: 5px;
+  text-align: center;
+}
