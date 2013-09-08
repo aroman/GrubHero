@@ -29,7 +29,7 @@ JQUERY_TIME_FORMAT = "%m/%d/%Y %I:%M %p"
 VENMO_OAUTH_CLIENT_ID = "1354"
 VENMO_OAUTH_CLIENT_SECRET = "GakFMxSFCEwWQ8bzYb3RLuJGwmkTBNPE"
 VENMO_ACCESS_TOKEN = "eSN3Z3A2KeRbcnNTqgLu6mRA4K9uED9V"
-VENMO_OAUTH_URL = "https://sandbox-api.venmo.com/oauth/authorize?client_id=%s&scope=make_payments,access_profile&response_type=code" % VENMO_OAUTH_CLIENT_ID
+VENMO_OAUTH_URL = "https://venmo.com/oauth/authorize?client_id=%s&scope=make_payments,access_profile&response_type=code" % VENMO_OAUTH_CLIENT_ID
 
 def logged_in():
     return 'venmo_id' in session
@@ -171,7 +171,7 @@ def index():
 def setup():
     oauth_code = request.args.get('code')
     if oauth_code:
-        url = "https://sandbox-api.venmo.com/oauth/access_token"
+        url = "https://venmo.com/oauth/access_token"
         data = {
             "client_id": VENMO_OAUTH_CLIENT_ID,
             "client_secret": VENMO_OAUTH_CLIENT_SECRET,
@@ -373,12 +373,12 @@ def charge_meal(meal_id):
             print "Adding %.2f to total" % entry['price'] * order['quantity']
             total += entry['price'] * order['quantity']
         print "Total for this person: %.2f" % total
-        url = "https://sandbox-api.venmo.com/payments"
+        url = "https://venmo.com/payments"
         data = {
             "access_token": hero['access_token'],
-            "user_id": "153136" or participant['venmo_id'],
+            "user_id": participant['venmo_id'],
             "note": "%s (via GrubHero)" % meal['name'],
-            "amount": -0.10 or -total
+            "amount": -total
         }
         pp(data)
         response = requests.post(url, data)
@@ -395,6 +395,9 @@ def charge_meal(meal_id):
             "meal_id": meal_id,
             "when": datetime.now()
         })
+
+        flash("Charged participants for %s" % meal['name'])
+        return redirect(url_for('index'))
         
 @app.route("/logout")
 def logout():
